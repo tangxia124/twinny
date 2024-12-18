@@ -28,7 +28,6 @@ import { OllamaService } from "../ollama"
 import { ProviderManager, TwinnyProvider } from "../provider-manager"
 import { GithubService as ReviewService } from "../review-service"
 import { SessionManager } from "../session-manager"
-import { SymmetryService } from "../symmetry-service"
 import { TemplateProvider } from "../template-provider"
 import { FileTreeProvider } from "../tree"
 import {
@@ -48,7 +47,6 @@ export class BaseProvider {
   private _ollamaService: OllamaService | undefined
   private _sessionManager: SessionManager | undefined
   private _statusBarItem: vscode.StatusBarItem
-  private _symmetryService?: SymmetryService
   private _templateDir: string | undefined
   private _templateProvider: TemplateProvider
   public context: vscode.ExtensionContext
@@ -81,11 +79,6 @@ export class BaseProvider {
 
   private initializeServices() {
     if (!this.webView) return
-    this._symmetryService = new SymmetryService(
-      this.webView,
-      this._sessionManager,
-      this.context
-    )
 
     this._chatService = new ChatService(
       this._statusBarItem,
@@ -93,22 +86,19 @@ export class BaseProvider {
       this.context,
       this.webView,
       this._embeddingDatabase,
-      this._sessionManager,
-      this._symmetryService
+      this._sessionManager
     )
 
     this.conversationHistory = new ConversationHistory(
       this.context,
       this.webView,
       this._sessionManager,
-      this._symmetryService
     )
 
     this.reviewService = new ReviewService(
       this.context,
       this.webView,
       this._sessionManager,
-      this._symmetryService,
       this._templateDir
     )
 
@@ -180,12 +170,6 @@ export class BaseProvider {
   ) => {
     const text = event.textEditor.document.getText(event.selections[0])
     this.sendTextSelectionToWebView(text)
-  }
-
-  public newConversation() {
-    this._symmetryService?.write(
-      createSymmetryMessage(serverMessageKeys.newConversation)
-    )
   }
 
   public editDefaultTemplates = async () => {

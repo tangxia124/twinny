@@ -32,19 +32,16 @@ type Conversations = Record<string, Conversation> | undefined
 export class ConversationHistory extends Base {
   public webView: Webview
   private _sessionManager: SessionManager | undefined
-  private _symmetryService: SymmetryService
   private _title = ""
 
   constructor(
     context: ExtensionContext,
     webView: Webview,
     sessionManager: SessionManager | undefined,
-    symmetryService: SymmetryService
   ) {
     super(context)
     this.webView = webView
     this._sessionManager = sessionManager
-    this._symmetryService = symmetryService
     this.setUpEventListeners()
   }
 

@@ -139,20 +139,6 @@ export async function activate(context: ExtensionContext) {
       } as ServerMessage<string>)
     }),
     commands.registerCommand(
-      TWINNY_COMMAND_NAME.twinnySymmetryTab,
-      async () => {
-        commands.executeCommand(
-          "setContext",
-          EXTENSION_CONTEXT_NAME.twinnySymmetryTab,
-          true
-        )
-        sidebarProvider.webView?.postMessage({
-          type: EVENT_NAME.twinnySetTab,
-          data: WEBUI_TABS.symmetry
-        } as ServerMessage<string>)
-      }
-    ),
-    commands.registerCommand(
       TWINNY_COMMAND_NAME.conversationHistory,
       async () => {
         commands.executeCommand(
@@ -201,11 +187,6 @@ export async function activate(context: ExtensionContext) {
       )
       commands.executeCommand(
         "setContext",
-        EXTENSION_CONTEXT_NAME.twinnySymmetryTab,
-        false
-      )
-      commands.executeCommand(
-        "setContext",
         EXTENSION_CONTEXT_NAME.twinnyManageProviders,
         false
       )
@@ -235,7 +216,6 @@ export async function activate(context: ExtensionContext) {
     }),
     commands.registerCommand(TWINNY_COMMAND_NAME.newConversation, () => {
       sidebarProvider.conversationHistory?.resetConversation()
-      sidebarProvider.newConversation()
       sidebarProvider.webView?.postMessage({
         type: EVENT_NAME.twinnyStopGeneration
       } as ServerMessage<string>)
