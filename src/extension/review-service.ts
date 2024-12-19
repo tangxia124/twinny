@@ -20,6 +20,7 @@ import {
 import { ConversationHistory } from "./conversation-history"
 import { llm } from "./llm"
 import { SessionManager } from "./session-manager"
+import { SymmetryService } from "./symmetry-service"
 import { TemplateProvider } from "./template-provider"
 import { getResponseData, updateLoadingMessage } from "./utils"
 
@@ -32,9 +33,10 @@ export class GithubService extends ConversationHistory {
     context: ExtensionContext,
     webView: Webview,
     sessionManager: SessionManager | undefined,
+    symmetryService: SymmetryService,
     templateDir: string | undefined
   ) {
-    super(context, webView, sessionManager)
+    super(context, webView, sessionManager, symmetryService)
     this._templateProvider = new TemplateProvider(templateDir)
   }
 

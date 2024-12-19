@@ -19,6 +19,7 @@ import {
   EVENT_NAME,
   EXTENSION_CONTEXT_NAME,
   EXTENSION_SESSION_NAME,
+  SYMMETRY_EMITTER_KEY,
   SYSTEM,
   USER,
   WEBUI_TABS
@@ -42,6 +43,7 @@ import { EmbeddingDatabase } from "./embeddings"
 import { llm } from "./llm"
 import { Reranker } from "./reranker"
 import { SessionManager } from "./session-manager"
+import { SymmetryService } from "./symmetry-service"
 import { TemplateProvider } from "./template-provider"
 import { Tools } from "./tools"
 import { getLanguage, getResponseData, updateLoadingMessage } from "./utils"
@@ -53,6 +55,7 @@ export class ChatService extends Base {
   private _promptTemplate = ""
   private _reranker: Reranker
   private _statusBar: StatusBarItem
+  private _symmetryService?: SymmetryService
   private _templateProvider?: TemplateProvider
   private _webView?: Webview
   private _sessionManager: SessionManager | undefined
@@ -66,6 +69,7 @@ export class ChatService extends Base {
     webView: Webview,
     db: EmbeddingDatabase | undefined,
     sessionManager: SessionManager | undefined,
+    symmetryService: SymmetryService
   ) {
     super(extensionContext)
     this._webView = webView
@@ -74,7 +78,24 @@ export class ChatService extends Base {
     this._reranker = new Reranker()
     this._db = db
     this._sessionManager = sessionManager
+    this._symmetryService = symmetryService
+    this.setupSymmetryListeners()
     this._tools = new Tools(webView, extensionContext)
+  }
+
+  private setupSymmetryListeners() {
+    this._symmetryService?.on(
+      SYMMETRY_EMITTER_KEY.inference,
+      (completion: string) => {
+        this._webView?.postMessage({
+          type: EVENT_NAME.twinnyOnCompletion,
+          data: {
+            content: completion.trimStart(),
+            role: ASSISTANT
+          }
+        } as ServerMessage<Message>)
+      }
+    )
   }
 
   private async getRelevantFiles(

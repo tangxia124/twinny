@@ -93,6 +93,11 @@
           "when": "view == twinny.sidebar"
         },
         {
+          "command": "twinny.symmetry",
+          "group": "navigation@2",
+          "when": "view == twinny.sidebar"
+        },
+        {
           "command": "twinny.manageProviders",
           "group": "navigation@3",
           "when": "view == twinny.sidebar"
@@ -175,6 +180,12 @@
         "shortTitle": "twinny code reviewer",
         "title": "Code reviewer",
         "icon": "$(git-pull-request)"
+      },
+      {
+        "command": "twinny.symmetry",
+        "shortTitle": "twinny symmetry network",
+        "title": "Symmetry network settings",
+        "icon": "$(mirror-public)"
       },
       {
         "command": "twinny.conversationHistory",
@@ -401,6 +412,12 @@
           "type": "boolean",
           "default": true,
           "markdownDescription": "Activates debug logging for Twinny. When `true`, Twinny will output detailed logs, which can be helpful for troubleshooting."
+        },
+        "twinny.symmetryServerKey": {
+          "order": 20,
+          "type": "string",
+          "markdownDescription": "Sets the symmetry master server key. Default value is provided for twinny's Symmetry server.",
+          "default": "4b4a9cc325d134dee6679e9407420023531fd7e96c563f6c5d00fd5549b77435"
         },
         "twinny.githubToken": {
           "order": 21,

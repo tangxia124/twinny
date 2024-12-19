@@ -25,6 +25,7 @@ export const SKIP_IMPORT_KEYWORDS_AFTER = ["from", "as", "import"]
 export const MIN_COMPLETION_CHUNKS = 2
 export const MAX_EMPTY_COMPLETION_CHARS = 250
 export const DEFAULT_RERANK_THRESHOLD = 0.5
+export const URL_SYMMETRY_WS = "https://twinny.dev/ws"
 
 export const defaultChunkOptions = {
   maxSize: 500,
@@ -39,6 +40,10 @@ export const EVENT_NAME = {
   twinnyChat: "twinny-chat",
   twinnyChatMessage: "twinny-chat-message",
   twinnyClickSuggestion: "twinny-click-suggestion",
+  twinnyConnectedToSymmetry: "twinny-connected-to-symmetry",
+  twinnyConnectSymmetry: "twinny-connect-symmetry",
+  twinnyDisconnectedFromSymmetry: "twinny-disconnected-from-symmetry",
+  twinnyDisconnectSymmetry: "twinny-disconnect-symmetry",
   twinnyEditDefaultTemplates: "twinny-edit-default-templates",
   twinnyEmbedDocuments: "twinny-embed-documents",
   twinnyEnableModelDownload: "twinny-enable-model-download",
@@ -63,6 +68,7 @@ export const EVENT_NAME = {
   twinnyRerankThresholdChanged: "twinny-rerank-threshold-changed",
   twinnySendLanguage: "twinny-send-language",
   twinnySendLoader: "twinny-send-loader",
+  twinnySendSymmetryMessage: "twinny-send-symmetry-message",
   twinnySendSystemMessage: "twinny-send-system-message",
   twinnySendTheme: "twinny-send-theme",
   twinnySessionContext: "twinny-session-context",
@@ -73,7 +79,10 @@ export const EVENT_NAME = {
   twinnySetSessionContext: "twinny-set-session-context",
   twinnySetTab: "twinny-set-tab",
   twinnySetWorkspaceContext: "twinny-set-workspace-context",
+  twinnyStartSymmetryProvider: "twinny-start-symmetry-provider",
   twinnyStopGeneration: "twinny-stop-generation",
+  twinnyStopSymmetryProvider: "twinny-stop-symmetry-provider",
+  twinnySymmetryModels: "twinny-symmetry-models",
   twinnyTextSelection: "twinny-text-selection",
 }
 
@@ -99,6 +108,7 @@ export const TWINNY_COMMAND_NAME = {
   stopGeneration: "twinny.stopGeneration",
   templateCompletion: "twinny.templateCompletion",
   templates: "twinny.templates",
+  twinnySymmetryTab: "twinny.symmetry",
 }
 
 export const CONVERSATION_EVENT_NAME = {
@@ -141,6 +151,10 @@ export const ACTIVE_FIM_PROVIDER_STORAGE_KEY = "twinny.active-fim-provider"
 export const CONVERSATION_STORAGE_KEY = "twinny.conversations"
 export const INFERENCE_PROVIDERS_STORAGE_KEY = "twinny.inference-providers"
 
+export const GLOBAL_STORAGE_KEY = {
+  autoConnectSymmetryProvider: "twinny.autoConnectSymmetryProvider",
+}
+
 export const WORKSPACE_STORAGE_KEY = {
   autoScroll: "autoScroll",
   chatMessage: "chatMessage",
@@ -174,6 +188,12 @@ export const EXTENSION_CONTEXT_NAME = {
   twinnyRelevantFilePaths: "twinnyRelevantFilePaths",
   twinnyRerankThreshold: "twinnyRerankThreshold",
   twinnyReviewTab: "twinnyReviewTab",
+  twinnySymmetryTab: "twinnySymmetryTab",
+}
+
+export const EXTENSION_SESSION_NAME = {
+  twinnySymmetryConnection: "twinnySymmetryConnection",
+  twinnySymmetryConnectionProvider: "twinnySymmetryConnectionProvider",
 }
 
 export const WEBUI_TABS = {
@@ -181,7 +201,8 @@ export const WEBUI_TABS = {
   history: "history",
   providers: "providers",
   review: "review",
-  settings: "templates"
+  settings: "templates",
+  symmetry: "symmetry",
 }
 
 export const FIM_TEMPLATE_FORMAT = {
@@ -351,6 +372,10 @@ export const MULTILINE_INSIDE = [
 export const MULTILINE_TYPES = [...MULTILINE_OUTSIDE, ...MULTILINE_INSIDE]
 
 export const MULTI_LINE_DELIMITERS = ["\n\n", "\r\n\r\n"]
+
+export const SYMMETRY_EMITTER_KEY = {
+  inference: "inference",
+}
 
 //Define an array containing all the error messages that need to be detected when fetch error occurred
 export const knownErrorMessages = [

@@ -216,13 +216,15 @@ export const apiProviders = {
 } as const
 
 export interface ApiModel {
-  authorization: string
-  chatUrl: string
-  completeUrl: string
-  maxTokens: number
+  parent_model: string
+  format: string
+  family: string
+  parameter_size: string
+  digest: string
   model: string
+  modified_at: string
   name: string
-  temperature: number
+  size: number
 }
 
 export interface ApiModels {
