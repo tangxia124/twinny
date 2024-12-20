@@ -9,15 +9,11 @@ import { Chat } from "./chat"
 import { ConversationHistory } from "./conversation-history"
 import { useLocale } from "./hooks"
 import { Providers } from "./providers"
-import { Review } from "./review"
 import { Settings } from "./settings"
-import { Symmetry } from "./symmetry"
 
 const tabs: Record<string, JSX.Element> = {
   [WEBUI_TABS.settings]: <Settings />,
-  [WEBUI_TABS.providers]: <Providers />,
-  [WEBUI_TABS.symmetry]: <Symmetry />,
-  [WEBUI_TABS.review]: <Review />
+  [WEBUI_TABS.providers]: <Providers />
 }
 
 interface MainProps {

@@ -286,7 +286,6 @@ export const useProviders = () => {
   const [providers, setProviders] = useState<Record<string, TwinnyProvider>>({})
   const [chatProvider, setChatProvider] = useState<TwinnyProvider>()
   const [fimProvider, setFimProvider] = useState<TwinnyProvider>()
-  const [embeddingProvider, setEmbeddingProvider] = useState<TwinnyProvider>()
   const handler = (event: MessageEvent) => {
     const message: ServerMessage<
       Record<string, TwinnyProvider> | TwinnyProvider
@@ -307,12 +306,6 @@ export const useProviders = () => {
       if (message.data) {
         const provider = message.data as TwinnyProvider
         setFimProvider(provider)
-      }
-    }
-    if (message?.type === PROVIDER_EVENT_NAME.getActiveEmbeddingsProvider) {
-      if (message.data) {
-        const provider = message.data as TwinnyProvider
-        setEmbeddingProvider(provider)
       }
     }
     return () => window.removeEventListener("message", handler)
@@ -389,9 +382,6 @@ export const useProviders = () => {
     global.vscode.postMessage({
       type: PROVIDER_EVENT_NAME.getActiveFimProvider
     })
-    global.vscode.postMessage({
-      type: PROVIDER_EVENT_NAME.getActiveEmbeddingsProvider
-    })
     window.addEventListener("message", handler)
     return () => window.removeEventListener("message", handler)
   }, [])
@@ -399,7 +389,6 @@ export const useProviders = () => {
   return {
     chatProvider,
     copyProvider,
-    embeddingProvider,
     fimProvider,
     getProvidersByType,
     providers,

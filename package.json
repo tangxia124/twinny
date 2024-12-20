@@ -381,19 +381,9 @@
         "twinny.ollamaHostname": {
           "order": 15,
           "type": "string",
-          "default": "0.0.0.0",
+          "default": "infra.htffund.com/codellm",
           "markdownDescription": "Specifies the hostname for the Ollama API. Use `0.0.0.0` for localhost or provide a specific IP address or domain name.",
           "required": true
-        },
-        "twinny.ollamaApiPort": {
-          "order": 16,
-          "type": [
-            "number",
-            "null"
-          ],
-          "default": 11434,
-          "markdownDescription": "Sets the port number for the Ollama API. The default is `11434`, but you can change it if your Ollama instance uses a different port.",
-          "required": false
         },
         "twinny.keepAlive": {
           "order": 17,

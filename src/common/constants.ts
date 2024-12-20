@@ -132,7 +132,6 @@ export const PROVIDER_EVENT_NAME = {
   copyProvider: "twinny.copy-provider",
   focusProviderTab: "twinny.focus-provider-tab",
   getActiveChatProvider: "twinny.get-active-provider",
-  getActiveEmbeddingsProvider: "twinny.get-active-embeddings-provider",
   getActiveFimProvider: "twinny.get-active-fim-provider",
   getAllProviders: "twinny.get-providers",
   removeProvider: "twinny.remove-provider",
@@ -145,8 +144,6 @@ export const PROVIDER_EVENT_NAME = {
 
 export const ACTIVE_CONVERSATION_STORAGE_KEY = "twinny.active-conversation"
 export const ACTIVE_CHAT_PROVIDER_STORAGE_KEY = "twinny.active-chat-provider"
-export const ACTIVE_EMBEDDINGS_PROVIDER_STORAGE_KEY =
-  "twinny.active-embeddings-provider"
 export const ACTIVE_FIM_PROVIDER_STORAGE_KEY = "twinny.active-fim-provider"
 export const CONVERSATION_STORAGE_KEY = "twinny.conversations"
 export const INFERENCE_PROVIDERS_STORAGE_KEY = "twinny.inference-providers"
@@ -200,9 +197,7 @@ export const WEBUI_TABS = {
   chat: "chat",
   history: "history",
   providers: "providers",
-  review: "review",
-  settings: "templates",
-  symmetry: "symmetry",
+  settings: "templates"
 }
 
 export const FIM_TEMPLATE_FORMAT = {

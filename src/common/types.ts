@@ -212,19 +212,18 @@ export const apiProviders = {
   LMStudio: "lmstudio",
   Ollama: "ollama",
   Oobabooga: "oobabooga",
-  OpenWebUI: "openwebui"
+  OpenWebUI: "openwebui",
+  CustomOpenAI: "customOpenAI"
 } as const
 
 export interface ApiModel {
-  parent_model: string
-  format: string
-  family: string
-  parameter_size: string
-  digest: string
+  authorization: string
+  chatUrl: string
+  completeUrl: string
+  maxTokens: number
   model: string
-  modified_at: string
   name: string
-  size: number
+  temperature: number
 }
 
 export interface ApiModels {
