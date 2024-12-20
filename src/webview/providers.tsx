@@ -97,7 +97,7 @@ export const Providers = () => {
               {Object.values(providers).map((provider, index) => (
                 <div className={styles.provider} key={index}>
                   <div className={styles.providerHeader}>
-                    {provider.provider === apiProviders.Ollama &&
+                    {provider.provider === apiProviders.CustomOpenAI &&
                       hasOllamaModels && (
                         <ModelSelect
                           models={models}
