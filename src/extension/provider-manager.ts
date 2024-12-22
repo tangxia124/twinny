@@ -23,6 +23,8 @@ export interface TwinnyProvider {
   apiKey?: string
   fimTemplate?: string
   repositoryLevel?: boolean
+  temperature?: number
+  maxTokens?: number
 }
 
 type Providers = Record<string, TwinnyProvider> | undefined
@@ -85,13 +87,15 @@ export class ProviderManager {
       apiPath: "/v1/chat/completions",
       apiProtocol: "http",
       id: uuidv4(),
-      label: "CodeQwen Chat",
-      modelName: "CodeQwen1.5-7B-Chat",
+      label: "CodeQwen",
+      modelName: "Qwen2_5-Coder-32B-Instruct-AWQ",
       provider: apiProviders.CustomOpenAI,
       type: "chat",
-      apiKey: "sk-iLiWSbLYunZDVpHVyZrmuA"
+      apiKey: "sk-iLiWSbLYunZDVpHVyZrmuA",
+      temperature: 0.1,
+      maxTokens: 1024
     } as TwinnyProvider
-  }
+    }
 
   getDefaultFimProvider() {
     return {
@@ -99,11 +103,14 @@ export class ProviderManager {
       apiPath: "/v1/completions",
       apiProtocol: "http",
       fimTemplate: FIM_TEMPLATE_FORMAT.codeqwen,
-      label: "CodeQwen FIM",
+      label: "CodeQwen",
       id: uuidv4(),
-      modelName: "CodeQwen1.5-7B-Chat",
+      modelName: "Qwen2_5-Coder-32B-Instruct-AWQ",
       provider: apiProviders.CustomOpenAI,
+      apiKey: "sk-iLiWSbLYunZDVpHVyZrmuA",
       type: "fim",
+      temperature: 0.1,
+      maxTokens: 1024
     } as TwinnyProvider
   }
 

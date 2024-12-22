@@ -20,7 +20,6 @@ import {
 } from "./common/constants"
 import { ServerMessage } from "./common/types"
 import { setContext } from "./extension/context"
-import { EmbeddingDatabase } from "./extension/embeddings"
 import { FileInteractionCache } from "./extension/file-interaction"
 import { CompletionProvider } from "./extension/providers/completion"
 import { FullScreenProvider } from "./extension/providers/panel"
@@ -46,23 +45,10 @@ export async function activate(context: ExtensionContext) {
     statusBarItem
   )
 
-  const homeDir = os.homedir()
-  const dbDir = path.join(homeDir, ".twinny/embeddings")
-  let db
-
-  if (workspace.name) {
-    const dbPath = path.join(dbDir, workspace.name as string)
-
-    if (!fs.existsSync(dbDir)) fs.mkdirSync(dbDir, { recursive: true })
-    db = new EmbeddingDatabase(dbPath, context)
-    await db.connect()
-  }
-
   const sidebarProvider = new SidebarProvider(
     statusBarItem,
     context,
     templateDir,
-    db,
     sessionManager
   )
 
@@ -176,17 +162,7 @@ export async function activate(context: ExtensionContext) {
       )
       commands.executeCommand(
         "setContext",
-        EXTENSION_CONTEXT_NAME.twinnySymmetryTab,
-        false
-      )
-      commands.executeCommand(
-        "setContext",
         EXTENSION_CONTEXT_NAME.twinnyManageProviders,
-        false
-      )
-      commands.executeCommand(
-        "setContext",
-        EXTENSION_CONTEXT_NAME.twinnyReviewTab,
         false
       )
     }),
@@ -210,7 +186,6 @@ export async function activate(context: ExtensionContext) {
     }),
     commands.registerCommand(TWINNY_COMMAND_NAME.newConversation, () => {
       sidebarProvider.conversationHistory?.resetConversation()
-      sidebarProvider.newConversation()
       sidebarProvider.webView?.postMessage({
         type: EVENT_NAME.twinnyStopGeneration
       } as ServerMessage<string>)

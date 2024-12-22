@@ -2,7 +2,6 @@ import * as vscode from "vscode"
 
 import {
   ACTIVE_CHAT_PROVIDER_STORAGE_KEY,
-  ACTIVE_EMBEDDINGS_PROVIDER_STORAGE_KEY,
   ACTIVE_FIM_PROVIDER_STORAGE_KEY,
   EVENT_NAME,
   EXTENSION_CONTEXT_NAME
@@ -44,13 +43,6 @@ export class Base {
     return provider
   }
 
-  public getEmbeddingProvider = () => {
-    const provider = this.context?.globalState.get<TwinnyProvider>(
-      ACTIVE_EMBEDDINGS_PROVIDER_STORAGE_KEY
-    )
-    return provider
-  }
-
   public buildStreamRequest(messages?: Message[] | Message[]) {
     const provider = this.getProvider()
 
@@ -58,7 +50,6 @@ export class Base {
 
     const requestOptions: LlmRequestOptions = {
       hostname: provider.apiHostname,
-      port: provider.apiPort ? Number(provider.apiPort) : undefined,
       path: provider.apiPath,
       protocol: provider.apiProtocol,
       method: "POST",
@@ -76,8 +67,7 @@ export class Base {
       provider.provider,
       {
         model: provider.modelName,
-        numPredictChat: this.config.numPredictChat,
-        temperature: this.config.temperature,
+        temperature: provider.temperature,
         messages,
         keepAlive: this.config.keepAlive
       },

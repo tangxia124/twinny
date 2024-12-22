@@ -24,7 +24,6 @@ import { llm } from "./llm"
 import { TwinnyProvider } from "./provider-manager"
 import { createStreamRequestBody } from "./provider-options"
 import { SessionManager } from "./session-manager"
-import { SymmetryService } from "./symmetry-service"
 import { getResponseData } from "./utils"
 
 type Conversations = Record<string, Conversation> | undefined
@@ -32,19 +31,16 @@ type Conversations = Record<string, Conversation> | undefined
 export class ConversationHistory extends Base {
   public webView: Webview
   private _sessionManager: SessionManager | undefined
-  private _symmetryService: SymmetryService
   private _title = ""
 
   constructor(
     context: ExtensionContext,
     webView: Webview,
     sessionManager: SessionManager | undefined,
-    symmetryService: SymmetryService
   ) {
     super(context)
     this.webView = webView
     this._sessionManager = sessionManager
-    this._symmetryService = symmetryService
     this.setUpEventListeners()
   }
 
@@ -117,7 +113,6 @@ export class ConversationHistory extends Base {
   private getRequestOptions(provider: TwinnyProvider) {
     return {
       hostname: provider.apiHostname,
-      port: provider.apiPort ? Number(provider.apiPort) : undefined,
       path: provider.apiPath,
       protocol: provider.apiProtocol,
       method: "POST",

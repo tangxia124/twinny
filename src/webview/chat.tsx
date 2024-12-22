@@ -27,12 +27,10 @@ import {
   Tool
 } from "../common/types"
 
-import { EmbeddingOptions } from "./embedding-options"
 import useAutosizeTextArea, {
   useConversationHistory,
   useSelection,
   useSuggestion,
-  useSymmetryConnection,
   useTheme,
   useWorkSpaceContext
 } from "./hooks"
@@ -62,8 +60,6 @@ export const Chat = (props: ChatProps): JSX.Element => {
   const [messages, setMessages] = useState<Message[]>()
   const [completion, setCompletion] = useState<Message | null>()
   const markdownRef = useRef<HTMLDivElement>(null)
-  const { symmetryConnection } = useSymmetryConnection()
-
   const { context: autoScrollContext, setContext: setAutoScrollContext } =
     useWorkSpaceContext<boolean>(WORKSPACE_STORAGE_KEY.autoScroll)
   const { context: showProvidersContext, setContext: setShowProvidersContext } =
@@ -347,23 +343,10 @@ export const Chat = (props: ChatProps): JSX.Element => {
   }
 
   const handleToggleProviderSelection = () => {
-    if (showEmbeddingOptionsContext) handleToggleEmbeddingOptions()
     setShowProvidersContext((prev) => {
       global.vscode.postMessage({
         type: EVENT_NAME.twinnySetWorkspaceContext,
         key: WORKSPACE_STORAGE_KEY.showProviders,
-        data: !prev
-      } as ClientMessage)
-      return !prev
-    })
-  }
-
-  const handleToggleEmbeddingOptions = () => {
-    if (showProvidersContext) handleToggleProviderSelection()
-    setShowEmbeddingOptionsContext((prev) => {
-      global.vscode.postMessage({
-        type: EVENT_NAME.twinnySetWorkspaceContext,
-        key: WORKSPACE_STORAGE_KEY.showEmbeddingOptions,
         data: !prev
       } as ClientMessage)
       return !prev
@@ -544,13 +527,7 @@ export const Chat = (props: ChatProps): JSX.Element => {
         {!!selection.length && (
           <Suggestions isDisabled={!!generatingRef.current} />
         )}
-        {showProvidersContext && !symmetryConnection && <ProviderSelect />}
-        {showProvidersContext && showEmbeddingOptionsContext && (
-          <VSCodeDivider />
-        )}
-        {showEmbeddingOptionsContext && !symmetryConnection && (
-          <EmbeddingOptions />
-        )}
+        {showProvidersContext &&  <ProviderSelect />}
         <div className={styles.chatOptions}>
           <div>
             <VSCodeButton
@@ -574,7 +551,7 @@ export const Chat = (props: ChatProps): JSX.Element => {
             <VSCodeBadge>{selection?.length}</VSCodeBadge>
           </div>
           <div>
-            {generatingRef.current && !symmetryConnection && (
+            {generatingRef.current && (
               <VSCodeButton
                 type="button"
                 appearance="icon"
@@ -584,15 +561,8 @@ export const Chat = (props: ChatProps): JSX.Element => {
                 <span className="codicon codicon-debug-stop"></span>
               </VSCodeButton>
             )}
-            {!symmetryConnection && (
+            {(
               <>
-                <VSCodeButton
-                  title={t("toggle-embedding-options")}
-                  appearance="icon"
-                  onClick={handleToggleEmbeddingOptions}
-                >
-                  <span className="codicon codicon-database"></span>
-                </VSCodeButton>
                 <VSCodeButton
                   title={t("toggle-provider-selection")}
                   appearance="icon"
@@ -601,18 +571,6 @@ export const Chat = (props: ChatProps): JSX.Element => {
                   <span className="codicon codicon-keyboard"></span>
                 </VSCodeButton>
               </>
-            )}
-            {!!symmetryConnection && (
-              <a
-                href={`https://twinny.dev/symmetry/?id=${symmetryConnection.id}`}
-              >
-                {/* TODO interpolate */}
-                <VSCodeBadge
-                  title={`Connected to symmetry network provider ${symmetryConnection?.name}, model ${symmetryConnection?.modelName}, provider ${symmetryConnection?.provider}`}
-                >
-                  ⚡️ {symmetryConnection?.name}
-                </VSCodeBadge>
-              </a>
             )}
           </div>
         </div>

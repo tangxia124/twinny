@@ -107,17 +107,6 @@ export const Providers = () => {
                           }
                         />
                       )}
-                    {provider.provider !== apiProviders.Ollama && (
-                      <VSCodeTextField
-                        required
-                        name="modelName"
-                        onChange={(e) => {
-                          handleChange(provider, e)
-                        }}
-                        value={provider.modelName}
-                        placeholder={t("applicable-ollama")}
-                      ></VSCodeTextField>
-                    )}
                     <div className={styles.providerActions}>
                       <VSCodeButton
                         appearance="icon"
@@ -170,12 +159,9 @@ export const Providers = () => {
                     <div>
                       <b>{t("protocol")}:</b> {provider.apiProtocol}
                     </div>
-                    <div>
-                      <b>{t("port")}:</b> {provider.apiPort}
-                    </div>
                     {provider.apiKey && (
                       <div>
-                        <b>{t("api-key")}:</b> {provider.apiKey.substring(0, 12)}...
+                        <b>{t("api-key")}:</b> {provider.apiKey}...
                       </div>
                     )}
                   </div>
@@ -241,7 +227,7 @@ function ProviderForm({ onClose, provider }: ProviderFormProps) {
   const hasOllamaModels = !!models?.length
 
   const getModelInput = () => {
-    if (formState.provider === apiProviders.Ollama && hasOllamaModels) {
+    if (formState.provider === apiProviders.CustomOpenAI && hasOllamaModels) {
       return (
         <div>
           <div>
@@ -300,7 +286,7 @@ function ProviderForm({ onClose, provider }: ProviderFormProps) {
             onChange={handleChangeDropdown}
             value={formState.type}
           >
-            {["chat", "fim", "embedding"].map((type, index) => (
+            {["chat", "fim"].map((type, index) => (
               <VSCodeOption key={index} value={type}>
                 {type}
               </VSCodeOption>
@@ -373,18 +359,6 @@ function ProviderForm({ onClose, provider }: ProviderFormProps) {
             name="apiHostname"
             value={formState.apiHostname}
             placeholder={t("hostname-placeholder")}
-          ></VSCodeTextField>
-        </div>
-
-        <div>
-          <div>
-            <label htmlFor="apiPort">{t("port")}</label>
-          </div>
-          <VSCodeTextField
-            onChange={handleChange}
-            name="apiPort"
-            value={formState.apiPort ? formState.apiPort.toString() : ""}
-            placeholder='Enter a port e.g "11434"'
           ></VSCodeTextField>
         </div>
 

@@ -20,7 +20,7 @@ export async function llm(request: LlmRequest) {
   }, 60000)
 
   try {
-    const url = `${options.protocol}://${options.hostname}${
+    const url = `${options.hostname}${
       options.port ? `:${options.port}` : ""
     }${options.path}`
     const fetchOptions = {

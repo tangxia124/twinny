@@ -110,13 +110,12 @@ export class CompletionProvider
     const body = createStreamRequestBodyFim(provider.provider, prompt, {
       model: provider.modelName,
       numPredictFim: this.config.numPredictFim,
-      temperature: this.config.temperature,
+      temperature: provider.temperature,
       keepAlive: this.config.eepAlive
     })
 
     const options: StreamRequestOptions = {
       hostname: provider.apiHostname,
-      port: provider.apiPort ? Number(provider.apiPort) : undefined,
       path: provider.apiPath,
       protocol: provider.apiProtocol,
       method: "POST",

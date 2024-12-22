@@ -21,8 +21,8 @@ export const ModelSelect = ({ model, models, setModel }: Props) => {
     <VSCodeDropdown onChange={handleOnChange} value={model}>
       {models?.map((model, index) => {
         return (
-          <option value={model.name} key={`${index}`}>
-            {getModelShortName(model.name)}
+          <option value={model.model} key={`${index}`}>
+            {getModelShortName(model.model)}
           </option>
         )
       })}

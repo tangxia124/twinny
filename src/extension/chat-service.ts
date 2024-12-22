@@ -39,11 +39,9 @@ import {
 import { kebabToSentence } from "../webview/utils"
 
 import { Base } from "./base"
-import { EmbeddingDatabase } from "./embeddings"
 import { llm } from "./llm"
 import { Reranker } from "./reranker"
 import { SessionManager } from "./session-manager"
-import { SymmetryService } from "./symmetry-service"
 import { TemplateProvider } from "./template-provider"
 import { Tools } from "./tools"
 import { getLanguage, getResponseData, updateLoadingMessage } from "./utils"
@@ -51,11 +49,9 @@ import { getLanguage, getResponseData, updateLoadingMessage } from "./utils"
 export class ChatService extends Base {
   private _completion = ""
   private _controller?: AbortController
-  private _db?: EmbeddingDatabase
   private _promptTemplate = ""
   private _reranker: Reranker
   private _statusBar: StatusBarItem
-  private _symmetryService?: SymmetryService
   private _templateProvider?: TemplateProvider
   private _webView?: Webview
   private _sessionManager: SessionManager | undefined
@@ -67,67 +63,17 @@ export class ChatService extends Base {
     templateDir: string | undefined,
     extensionContext: ExtensionContext,
     webView: Webview,
-    db: EmbeddingDatabase | undefined,
     sessionManager: SessionManager | undefined,
-    symmetryService: SymmetryService
   ) {
     super(extensionContext)
     this._webView = webView
     this._statusBar = statusBar
     this._templateProvider = new TemplateProvider(templateDir)
     this._reranker = new Reranker()
-    this._db = db
     this._sessionManager = sessionManager
-    this._symmetryService = symmetryService
-    this.setupSymmetryListeners()
     this._tools = new Tools(webView, extensionContext)
   }
 
-  private setupSymmetryListeners() {
-    this._symmetryService?.on(
-      SYMMETRY_EMITTER_KEY.inference,
-      (completion: string) => {
-        this._webView?.postMessage({
-          type: EVENT_NAME.twinnyOnCompletion,
-          data: {
-            content: completion.trimStart(),
-            role: ASSISTANT
-          }
-        } as ServerMessage<Message>)
-      }
-    )
-  }
-
-  private async getRelevantFiles(
-    text: string | undefined
-  ): Promise<[string, number][]> {
-    if (!this._db || !text || !workspace.name) return []
-
-    const table = `${workspace.name}-file-paths`
-    if (await this._db.hasEmbeddingTable(table)) {
-      const embedding = await this._db.fetchModelEmbedding(text)
-
-      if (!embedding) return []
-
-      const relevantFileCountContext = `${EVENT_NAME.twinnyGlobalContext}-${EXTENSION_CONTEXT_NAME.twinnyRelevantFilePaths}`
-      const stored = this.context?.globalState.get(
-        relevantFileCountContext
-      ) as number
-      const relevantFileCount = Number(stored) || DEFAULT_RELEVANT_FILE_COUNT
-
-      const filePaths =
-        (await this._db.getDocuments(embedding, relevantFileCount, table)) || []
-
-      if (!filePaths.length) return []
-
-      return this.rerankFiles(
-        text,
-        filePaths.map((f) => f.content)
-      )
-    }
-
-    return []
-  }
 
   private getRerankThreshold() {
     const rerankThresholdContext = `${EVENT_NAME.twinnyGlobalContext}-${EXTENSION_CONTEXT_NAME.twinnyRerankThreshold}`
@@ -137,35 +83,6 @@ export class ChatService extends Base {
     const rerankThreshold = stored || DEFAULT_RERANK_THRESHOLD
 
     return rerankThreshold
-  }
-
-  private async rerankFiles(
-    text: string | undefined,
-    filePaths: string[] | undefined
-  ) {
-    if (!this._db || !text || !workspace.name || !filePaths?.length) return []
-
-    const rerankThreshold = this.getRerankThreshold()
-
-    logger.log(
-      `
-      Reranking threshold: ${rerankThreshold}
-    `.trim()
-    )
-
-    const fileNames = filePaths?.map((filePath) => path.basename(filePath))
-
-    const scores = await this._reranker.rerank(text, fileNames)
-
-    if (!scores) return []
-
-    const fileScorePairs: [string, number][] = filePaths.map(
-      (filePath, index) => {
-        return [filePath, scores[index]]
-      }
-    )
-
-    return fileScorePairs
   }
 
   private async readFileContent(
@@ -191,84 +108,6 @@ export class ChatService extends Base {
       return null
     }
   }
-
-  private async getRelevantCode(
-    text: string | undefined,
-    relevantFiles: [string, number][]
-  ): Promise<string> {
-    if (!this._db || !text || !workspace.name) return ""
-
-    const table = `${workspace.name}-documents`
-    const rerankThreshold = this.getRerankThreshold()
-
-    if (await this._db.hasEmbeddingTable(table)) {
-      const relevantCodeCountContext = `${EVENT_NAME.twinnyGlobalContext}-${EXTENSION_CONTEXT_NAME.twinnyRelevantCodeSnippets}`
-      const stored = this.context?.globalState.get(
-        relevantCodeCountContext
-      ) as number
-      const relevantCodeCount = Number(stored) || DEFAULT_RELEVANT_CODE_COUNT
-
-      const embedding = await this._db.fetchModelEmbedding(text)
-
-      if (!embedding) return ""
-
-      const query = relevantFiles?.length
-        ? `file IN ("${relevantFiles.map((file) => file[0]).join("\",\"")}")`
-        : ""
-
-      const queryEmbeddedDocuments =
-        (await this._db.getDocuments(
-          embedding,
-          Math.round(relevantCodeCount / 2),
-          table,
-          query
-        )) || []
-
-      const embeddedDocuments =
-        (await this._db.getDocuments(
-          embedding,
-          Math.round(relevantCodeCount / 2),
-          table
-        )) || []
-
-      const documents = [...embeddedDocuments, ...queryEmbeddedDocuments]
-
-      const documentScores = await this._reranker.rerank(
-        text,
-        documents.map((item) => (item.content ? item.content.trim() : ""))
-      )
-
-      if (!documentScores) return ""
-
-      const readThreshould = rerankThreshold
-
-      const readFileChunks = []
-
-      for (let i = 0; i < relevantFiles.length; i++) {
-        if (relevantFiles[i][1] > readThreshould) {
-          try {
-            const fileContent = await this.readFileContent(relevantFiles[i][0])
-            readFileChunks.push(fileContent)
-          } catch (error) {
-            console.error(`Error reading file ${relevantFiles[i][0]}:`, error)
-          }
-        }
-      }
-
-      const documentChunks = documents
-        .filter((_, index) => documentScores[index] > rerankThreshold)
-        .map(({ content }) => content)
-
-      return [readFileChunks.filter(Boolean), documentChunks.filter(Boolean)]
-        .join("\n\n")
-        .trim()
-    }
-
-    return ""
-  }
-
-
-
 
 
   async getMessageTools(data: {
@@ -475,8 +314,6 @@ export class ChatService extends Base {
 
     let combinedContext = ""
 
-    const workspaceMentioned = text?.includes("@workspace")
-
     const problemsMentioned = text?.includes("@problems")
 
     if (symmetryConnected) return null
@@ -492,12 +329,6 @@ export class ChatService extends Base {
 
     let relevantFiles: [string, number][] | null = []
     let relevantCode: string | null = ""
-
-    if (workspaceMentioned) {
-      updateLoadingMessage(this._webView, "Exploring knowledge base")
-      relevantFiles = await this.getRelevantFiles(prompt)
-      relevantCode = await this.getRelevantCode(prompt, relevantFiles)
-    }
 
     if (relevantFiles?.length) {
       const filesTemplate =
@@ -584,10 +415,6 @@ export class ChatService extends Base {
 
     this._conversation.push(...messages.slice(0, -1))
 
-    if (!provider.modelName.includes("claude")) {
-      this._conversation.unshift(systemMessage)
-    }
-
     if (additionalContext) {
       const lastMessageContent = `${cleanedText}\n\n${additionalContext.trim()}`
       this._conversation.push({
@@ -664,11 +491,6 @@ export class ChatService extends Base {
       role: USER,
       content: userContent
     })
-
-    if (!provider.modelName.includes("claude")) {
-      conversation.unshift(systemMessage)
-    }
-
     return conversation
   }
 

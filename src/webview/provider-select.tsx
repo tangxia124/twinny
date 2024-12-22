@@ -74,7 +74,7 @@ export const ProviderSelect = () => {
             ))}
         </VSCodeDropdown>
       </div>
-      <div className={styles.enableTools}>
+      {/* <div className={styles.enableTools}>
         <div className={indexStyles.vscodeCheckbox}>
           <label htmlFor="repositoryLevel">
             <VSCodeCheckbox
@@ -86,7 +86,7 @@ export const ProviderSelect = () => {
             <span>{t("enable-tools")}</span>
           </label>
         </div>
-      </div>
+      </div> */}
     </div>
   )
 }

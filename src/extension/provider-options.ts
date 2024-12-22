@@ -11,8 +11,8 @@ import {
 export function createStreamRequestBody(
   provider: string,
   options: {
-    temperature: number
-    numPredictChat: number
+    temperature?: number
+    numPredictChat?: number
     model: string
     messages?: Message[]
     keepAlive?: string | number
@@ -21,19 +21,12 @@ export function createStreamRequestBody(
 ): RequestBodyBase | RequestOptionsOllama | StreamBodyOpenAI {
   switch (provider) {
     case apiProviders.Ollama:
-    case apiProviders.OpenWebUI:
+    case apiProviders.CustomOpenAI:
       return {
         model: options.model,
-        stream: !tools?.length,
+        stream: true,
         messages: options.messages,
-        tools: tools,
-        keep_alive: options.keepAlive === "-1"
-          ? -1
-          : options.keepAlive,
-        options: {
-          temperature: options.temperature,
-          num_predict: options.numPredictChat,
-        },
+        temperature: options.temperature
       }
     case apiProviders.LiteLLM:
     default:
@@ -52,7 +45,7 @@ export function createStreamRequestBodyFim(
   provider: string,
   prompt: string,
   options: {
-    temperature: number
+    temperature?: number
     numPredictFim: number
     model: string
     keepAlive?: string | number
@@ -60,18 +53,12 @@ export function createStreamRequestBodyFim(
 ): RequestBodyBase | RequestOptionsOllama | StreamBodyOpenAI {
   switch (provider) {
     case apiProviders.Ollama:
-    case apiProviders.OpenWebUI:
+    case apiProviders.CustomOpenAI:
       return {
         model: options.model,
         prompt,
         stream: true,
-        keep_alive: options.keepAlive === "-1"
-          ? -1
-          : options.keepAlive,
-        options: {
-          temperature: options.temperature,
-          num_predict: options.numPredictFim,
-        },
+        temperature: options.temperature   
       }
     case apiProviders.LMStudio:
       return {

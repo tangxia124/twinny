@@ -85,47 +85,37 @@
         {
           "command": "twinny.openChat",
           "group": "navigation@0",
-          "when": "view == twinny.sidebar && twinnyManageTemplates || view == twinny.sidebar && twinnyManageProviders || view == twinny.sidebar && twinnyConversationHistory || view == twinny.sidebar && twinnySymmetryTab || view == twinny.sidebar && twinnyReviewTab"
-        },
-        {
-          "command": "twinny.review",
-          "group": "navigation@1",
-          "when": "view == twinny.sidebar"
-        },
-        {
-          "command": "twinny.symmetry",
-          "group": "navigation@2",
-          "when": "view == twinny.sidebar"
-        },
-        {
-          "command": "twinny.manageProviders",
-          "group": "navigation@3",
-          "when": "view == twinny.sidebar"
-        },
-        {
-          "command": "twinny.manageTemplates",
-          "group": "navigation@4",
-          "when": "view == twinny.sidebar"
-        },
-        {
-          "command": "twinny.conversationHistory",
-          "when": "view == twinny.sidebar",
-          "group": "navigation@5"
-        },
-        {
-          "command": "twinny.openPanelChat",
-          "when": "view == twinny.sidebar",
-          "group": "navigation@6"
+          "when": "view == twinny.sidebar && twinnyManageTemplates || view == twinny.sidebar && twinnyManageProviders || view == twinny.sidebar && twinnyConversationHistory"
         },
         {
           "command": "twinny.newConversation",
           "when": "view == twinny.sidebar",
-          "group": "navigation@7"
+          "group": "navigation@1"
+        },
+        {
+          "command": "twinny.openPanelChat",
+          "when": "view == twinny.sidebar",
+          "group": "navigation@2"
+        },
+        {
+          "command": "twinny.conversationHistory",
+          "when": "view == twinny.sidebar",
+          "group": "navigation@3"
+        },
+        {
+          "command": "twinny.manageProviders",
+          "group": "navigation@4",
+          "when": "view == twinny.sidebar"
+        },
+        {
+          "command": "twinny.manageTemplates",
+          "group": "navigation@5",
+          "when": "view == twinny.sidebar"
         },
         {
           "command": "twinny.settings",
           "when": "view == twinny.sidebar",
-          "group": "navigation@8"
+          "group": "navigation@6"
         }
       ]
     },
@@ -174,18 +164,6 @@
         "shortTitle": "twinny settings",
         "title": "Open twinny settings",
         "icon": "$(gear)"
-      },
-      {
-        "command": "twinny.review",
-        "shortTitle": "twinny code reviewer",
-        "title": "Code reviewer",
-        "icon": "$(git-pull-request)"
-      },
-      {
-        "command": "twinny.symmetry",
-        "shortTitle": "twinny symmetry network",
-        "title": "Symmetry network settings",
-        "icon": "$(mirror-public)"
       },
       {
         "command": "twinny.conversationHistory",
@@ -321,7 +299,7 @@
         "twinny.temperature": {
           "order": 6,
           "type": "number",
-          "default": 0.2,
+          "default": 0.1,
           "markdownDescription": "Controls the randomness of the model's output. Lower values (e.g., 0.2) produce more focused and deterministic outputs, while higher values (e.g., 0.8) lead to more diverse and creative completions.",
           "required": true
         },
@@ -402,12 +380,6 @@
           "type": "boolean",
           "default": true,
           "markdownDescription": "Activates debug logging for Twinny. When `true`, Twinny will output detailed logs, which can be helpful for troubleshooting."
-        },
-        "twinny.symmetryServerKey": {
-          "order": 20,
-          "type": "string",
-          "markdownDescription": "Sets the symmetry master server key. Default value is provided for twinny's Symmetry server.",
-          "default": "4b4a9cc325d134dee6679e9407420023531fd7e96c563f6c5d00fd5549b77435"
         },
         "twinny.githubToken": {
           "order": 21,
