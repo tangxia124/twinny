@@ -14,7 +14,7 @@ import {
   DEFAULT_PROVIDER_FORM_VALUES,
   FIM_TEMPLATE_FORMAT,
 } from "../common/constants"
-import { apiProviders } from "../common/types"
+import { ApiModel, apiProviders } from "../common/types"
 import { TwinnyProvider } from "../extension/provider-manager"
 
 import { useOllamaModels, useProviders } from "./hooks"
@@ -63,18 +63,22 @@ export const Providers = () => {
     resetProviders()
   }
 
-  const handleSetModel = (provider: TwinnyProvider, model: string) => {
+  const handleSetModel = (provider: TwinnyProvider, model: ApiModel) => {
     updateProvider({
       ...provider,
-      modelName: model,
+      modelName: model.model,
+      label: model.name + "_remote",
+      apiKey: model.authorization,
+      temperature: model.temperature,
+      maxTokens: model.maxTokens
     })
   }
 
-  const handleChange = (provider: TwinnyProvider, e: unknown) => {
-    const event = e as unknown as React.ChangeEvent<HTMLInputElement>
-    const { value } = event.target
-    handleSetModel(provider, value)
-  }
+  // const handleChange = (provider: TwinnyProvider, e: unknown) => {
+  //   const event = e as unknown as React.ChangeEvent<HTMLInputElement>
+  //   const { value } = event.target
+  //   handleSetModel(provider, value)
+  // }
 
   return (
     <div>
@@ -102,7 +106,7 @@ export const Providers = () => {
                         <ModelSelect
                           models={models}
                           model={provider.modelName}
-                          setModel={(model: string) =>
+                          setModel={(model: ApiModel) =>
                             handleSetModel(provider, model)
                           }
                         />
@@ -236,8 +240,15 @@ function ProviderForm({ onClose, provider }: ProviderFormProps) {
           <ModelSelect
             models={models}
             model={formState.modelName}
-            setModel={(model: string) => {
-              setFormState({ ...formState, modelName: model })
+            setModel={(model: ApiModel) => {
+              setFormState({
+                ...formState,
+                modelName: model.model,
+                label: model.name + "_remote",
+                apiKey: model.authorization,
+                temperature: model.temperature,
+                maxTokens: model.maxTokens
+              })
             }}
           />
         </div>

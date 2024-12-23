@@ -87,12 +87,12 @@ export class ProviderManager {
       apiPath: "/v1/chat/completions",
       apiProtocol: "http",
       id: uuidv4(),
-      label: "CodeQwen",
+      label: "CodeQwen"+"_default",
       modelName: "Qwen2_5-Coder-32B-Instruct-AWQ",
       provider: apiProviders.CustomOpenAI,
       type: "chat",
       apiKey: "sk-iLiWSbLYunZDVpHVyZrmuA",
-      temperature: 0.1,
+      temperature: 0.2,
       maxTokens: 1024
     } as TwinnyProvider
     }
@@ -103,13 +103,13 @@ export class ProviderManager {
       apiPath: "/v1/completions",
       apiProtocol: "http",
       fimTemplate: FIM_TEMPLATE_FORMAT.codeqwen,
-      label: "CodeQwen",
+      label: "CodeQwen"+"_default",
       id: uuidv4(),
       modelName: "Qwen2_5-Coder-32B-Instruct-AWQ",
       provider: apiProviders.CustomOpenAI,
       apiKey: "sk-iLiWSbLYunZDVpHVyZrmuA",
       type: "fim",
-      temperature: 0.1,
+      temperature: 0.2,
       maxTokens: 1024
     } as TwinnyProvider
   }

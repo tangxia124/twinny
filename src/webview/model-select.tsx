@@ -6,7 +6,7 @@ import { getModelShortName } from "./utils"
 
 interface Props {
   model: string | undefined
-  setModel: (model: string) => void
+  setModel: (model: ApiModel) => void
   models: ApiModel[] | undefined
 }
 
@@ -14,7 +14,7 @@ export const ModelSelect = ({ model, models, setModel }: Props) => {
   const handleOnChange = (e: unknown): void => {
     const event = e as React.ChangeEvent<HTMLSelectElement>
     const selectedValue = event?.target.value || ""
-    setModel(selectedValue)
+    setModel(models?.find(model => model.model === selectedValue)!)
   }
 
   return (
