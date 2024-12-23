@@ -168,6 +168,16 @@ export const Providers = () => {
                         <b>{t("api-key")}:</b> {provider.apiKey}...
                       </div>
                     )}
+                    {provider.temperature && (
+                      <div>
+                        <b>{t("temperature")}:</b> {provider.temperature}
+                      </div>
+                    )}
+                    {provider.maxTokens && (
+                      <div>
+                        <b>{t("maxTokens")}:</b> {provider.maxTokens}
+                      </div>
+                    )}
                   </div>
                 </div>
               ))}
@@ -395,6 +405,30 @@ function ProviderForm({ onClose, provider }: ProviderFormProps) {
             name="apiKey"
             value={formState.apiKey || ""}
             placeholder={t("api-key-placeholder")}
+          ></VSCodeTextField>
+        </div>
+
+        <div>
+          <div>
+            <label htmlFor="temperature">{t("temperature")}</label>
+          </div>
+          <VSCodeTextField
+            onChange={handleChange}
+            name="temperature"
+            value={formState.temperature+""}
+            placeholder={t("temperature-placeholder")}
+          ></VSCodeTextField>
+        </div>
+
+        <div>
+          <div>
+            <label htmlFor="maxTokens">{t("max-tokens")}</label>
+          </div>
+          <VSCodeTextField
+            onChange={handleChange}
+            name="maxTokens"
+            value={formState.maxTokens+""}
+            placeholder={t("max-tokens-placeholder")}
           ></VSCodeTextField>
         </div>
 

@@ -207,12 +207,6 @@ export interface UiTabs {
 }
 
 export const apiProviders = {
-  LiteLLM: "litellm",
-  LlamaCpp: "llamacpp",
-  LMStudio: "lmstudio",
-  Ollama: "ollama",
-  Oobabooga: "oobabooga",
-  OpenWebUI: "openwebui",
   CustomOpenAI: "customOpenAI"
 } as const
 

@@ -256,17 +256,17 @@ export const DEFAULT_ACTION_TEMPLATES = [
 ]
 
 export const DEFAULT_PROVIDER_FORM_VALUES = {
-  apiHostname: "0.0.0.0",
-  apiKey: "",
-  apiPath: "",
-  apiPort: 11434,
+  apiHostname: "http://llm.htffund.com",
+  apiKey: "sk-iLiWSbLYunZDVpHVyZrmuA",
+  apiPath: "/v1/chat/completions",
   apiProtocol: "http",
   id: "",
-  label: "",
-  modelName: "",
-  name: "",
-  provider: "ollama",
+  label: "CodeQwen"+"label"+"_default",
+  modelName: "Qwen2_5-Coder-32B-Instruct-AWQ",
+  provider: "customOpenAI",
   type: "chat",
+  temperature: 0.2,
+  maxTokens: 1024
 }
 
 export const GITHUB_EVENT_NAME = {
