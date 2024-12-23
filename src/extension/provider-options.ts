@@ -20,7 +20,6 @@ export function createStreamRequestBody(
   tools?: FunctionTool[],
 ): RequestBodyBase | RequestOptionsOllama | StreamBodyOpenAI {
   switch (provider) {
-    case apiProviders.Ollama:
     case apiProviders.CustomOpenAI:
       return {
         model: options.model,
@@ -28,7 +27,6 @@ export function createStreamRequestBody(
         messages: options.messages,
         temperature: options.temperature
       }
-    case apiProviders.LiteLLM:
     default:
       return {
         model: options.model,
@@ -52,37 +50,12 @@ export function createStreamRequestBodyFim(
   }
 ): RequestBodyBase | RequestOptionsOllama | StreamBodyOpenAI {
   switch (provider) {
-    case apiProviders.Ollama:
     case apiProviders.CustomOpenAI:
       return {
         model: options.model,
         prompt,
         stream: true,
         temperature: options.temperature   
-      }
-    case apiProviders.LMStudio:
-      return {
-        model: options.model,
-        prompt,
-        stream: true,
-        temperature: options.temperature,
-        max_tokens: options.numPredictFim,
-      }
-    case apiProviders.LlamaCpp:
-    case apiProviders.Oobabooga:
-      return {
-        prompt,
-        stream: true,
-        temperature: options.temperature,
-        max_tokens: options.numPredictFim,
-      }
-    case apiProviders.LiteLLM:
-      return {
-        messages: [{ content: prompt, role: USER }],
-        model: options.model,
-        stream: true,
-        max_tokens: options.numPredictFim,
-        temperature: options.temperature,
       }
     default:
       return {

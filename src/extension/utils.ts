@@ -338,21 +338,12 @@ export const getFimDataFromProvider = (
   provider: string,
   data: StreamResponse | undefined
 ) => {
-  switch (provider) {
-    case apiProviders.Ollama:
-    case apiProviders.OpenWebUI:
-      return data?.response
-    case apiProviders.LlamaCpp:
-      return data?.content
-    case apiProviders.LiteLLM:
-      return data?.choices[0].delta.content
-    default:
-      if (!data?.choices.length) return
-      if (data?.choices[0].text === "undefined") {
-        return ""
-      }
-      return data?.choices[0].text ? data?.choices[0].text : ""
+  if(!provider) return
+  if (!data?.choices.length) return
+  if (data?.choices[0].text === "undefined") {
+    return ""
   }
+  return data?.choices[0].text ? data?.choices[0].text : ""
 }
 
 export function isStreamWithDataPrefix(stringBuffer: string) {
