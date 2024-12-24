@@ -1,4 +1,5 @@
 import * as vscode from "vscode"
+import * as os from "os"
 
 import {
   ACTIVE_CHAT_PROVIDER_STORAGE_KEY,
@@ -14,6 +15,7 @@ import {
 
 import { TwinnyProvider } from "./provider-manager"
 import { createStreamRequestBody } from "./provider-options"
+import { ConfigurationTarget } from "vscode"
 
 export class Base {
   public config = vscode.workspace.getConfiguration("twinny")
@@ -27,6 +29,12 @@ export class Base {
       }
       this.updateConfig()
     })
+    const username = this.config.get("username")
+    if (!username) {
+      const userInfo = os.userInfo();
+      const username = userInfo.username ? userInfo.username : "vscode default username";
+      this.config.update("username", username, ConfigurationTarget.Global)
+    }
   }
 
   public getFimProvider = () => {
@@ -79,5 +87,11 @@ export class Base {
 
   public updateConfig() {
     this.config = vscode.workspace.getConfiguration("twinny")
+    const username = this.config.get("username")
+    if (!username) {
+      const userInfo = os.userInfo();
+      const username = userInfo.username ? userInfo.username : "vscode default username";
+      this.config.update("username", username, ConfigurationTarget.Global)
+    }
   }
 }
