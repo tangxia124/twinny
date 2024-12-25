@@ -41,7 +41,7 @@ export async function llm(request: LlmRequest, statistics?: Statistics) {
           username: statistics.username,
           project: statistics.project,
           uuid: statistics.uuid,
-          request: body.messages[body.messages.length - 1],
+          request: body.messages[body.messages.length - 1].content,
           source: statistics.source,
           model: statistics.model,
           action: statistics.action
