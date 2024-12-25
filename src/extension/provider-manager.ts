@@ -92,7 +92,7 @@ export class ProviderManager {
       provider: apiProviders.CustomOpenAI,
       type: "chat",
       apiKey: "sk-iLiWSbLYunZDVpHVyZrmuA",
-      temperature: 0.2,
+      temperature: 0.1,
       maxTokens: 1024
     } as TwinnyProvider
     }
@@ -109,7 +109,7 @@ export class ProviderManager {
       provider: apiProviders.CustomOpenAI,
       apiKey: "sk-iLiWSbLYunZDVpHVyZrmuA",
       type: "fim",
-      temperature: 0.2,
+      temperature: 0.1,
       maxTokens: 1024
     } as TwinnyProvider
   }
