@@ -1,6 +1,7 @@
+import * as vscode from "vscode"
 import { defaultTemplates } from "../extension/templates"
 
-export const EXTENSION_NAME = "@ext:rjmacarthy.twinny"
+export const EXTENSION_NAME = "@ext:htffund.twinny"
 export const ASSISTANT = "assistant"
 export const USER = "user"
 export const TWINNY = "twinny"
@@ -26,6 +27,10 @@ export const MIN_COMPLETION_CHUNKS = 2
 export const MAX_EMPTY_COMPLETION_CHARS = 250
 export const DEFAULT_RERANK_THRESHOLD = 0.5
 export const URL_SYMMETRY_WS = "https://twinny.dev/ws"
+export const askUrl = "http://infra.htffund.com/codellm/v1/ask"
+export const applyUrl = "http://infra.htffund.com/codellm/v1/apply"
+export const autoCompleteUrl = "http://infra.htffund.com/codellm/v1/autoComplete"
+export const versionUrl = "http://infra.htffund.com/codellm/v1/version"
 
 export const defaultChunkOptions = {
   maxSize: 500,

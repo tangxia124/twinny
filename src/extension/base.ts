@@ -77,7 +77,7 @@ export class Base {
         model: provider.modelName,
         temperature: provider.temperature,
         messages,
-        keepAlive: this.config.keepAlive
+        max_tokens: provider.maxTokens
       },
       functionTools
     )

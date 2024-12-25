@@ -336,20 +336,6 @@
           "default": false,
           "markdownDescription": "Enables caching of Fill-in-Middle (FIM) completions for identical prompts. This can significantly improve performance but may use more memory."
         },
-        "twinny.numPredictChat": {
-          "order": 12,
-          "type": "number",
-          "default": 512,
-          "markdownDescription": "Sets the maximum number of tokens to generate for chat completions. Higher values allow for longer completions but may increase response time.",
-          "required": true
-        },
-        "twinny.numPredictFim": {
-          "order": 13,
-          "type": "number",
-          "default": 512,
-          "markdownDescription": "Defines the maximum number of tokens for Fill-in-Middle (FIM) completions. Use `-1` for no limit. Twinny will attempt to stop at logical line breaks regardless of this setting.",
-          "required": true
-        },
         "twinny.enableSubsequentCompletions": {
           "order": 14,
           "type": "boolean",

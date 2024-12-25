@@ -109,9 +109,8 @@ export class CompletionProvider
   private buildFimRequest(prompt: string, provider: TwinnyProvider) {
     const body = createStreamRequestBodyFim(provider.provider, prompt, {
       model: provider.modelName,
-      numPredictFim: this.config.numPredictFim,
       temperature: provider.temperature,
-      keepAlive: this.config.eepAlive
+      max_tokens: provider.maxTokens
     })
 
     const options: StreamRequestOptions = {

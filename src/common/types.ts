@@ -7,23 +7,14 @@ import { CodeLanguageDetails } from "./languages"
 
 export interface RequestBodyBase {
   stream: boolean
-  n_predict?: number
+  max_tokens?: number
   temperature?: number
 }
 
 export interface RequestOptionsOllama extends RequestBodyBase {
   model: string
-  keep_alive?: string | number
-  messages?: Message[] | Message
+  messages?: Message[]
   prompt?: string
-  input?: string
-  options: Record<string, unknown>
-}
-
-export interface StreamBodyOpenAI extends RequestBodyBase {
-  messages?: Message[] | Message
-  max_tokens: number
-  tools?: FunctionTool[]
 }
 
 export interface PrefixSuffix {
@@ -194,9 +185,9 @@ export interface StreamRequestOptions {
 }
 
 export interface StreamRequest {
-  body: RequestBodyBase | StreamBodyOpenAI
+  body: RequestOptionsOllama
   options: StreamRequestOptions
-  onEnd?: (response?: StreamResponse) => void
+  onEnd?: (response?: StreamResponse, statistics?: Statistics) => void
   onStart?: (controller: AbortController) => void
   onError?: (error: Error) => void
   onData: (streamResponse: StreamResponse) => void
@@ -220,6 +211,17 @@ export interface ApiModel {
   temperature: number
 }
 
+export interface Statistics {
+  username: string|unknown
+  project?: string
+  uuid: string
+  request?: string
+  response?: string
+  source: string
+  model?: string
+  action: string
+}
+
 export interface ApiModels {
   models: ApiModel[]
 }
@@ -228,8 +230,8 @@ export type ResolvedInlineCompletion =
   | InlineCompletionItem[]
   | InlineCompletionList
   | PromiseLike<
-      InlineCompletionItem[] | InlineCompletionList | null | undefined
-    >
+    InlineCompletionItem[] | InlineCompletionList | null | undefined
+  >
   | null
   | undefined
 

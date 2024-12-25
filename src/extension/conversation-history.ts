@@ -14,7 +14,7 @@ import {
   ClientMessage,
   Conversation,
   Message,
-  RequestBodyBase,
+  RequestOptionsOllama,
   ServerMessage,
   StreamRequestOptions
 } from "../common/types"
@@ -77,7 +77,7 @@ export class ConversationHistory extends Base {
     requestBody,
     requestOptions
   }: {
-    requestBody: RequestBodyBase
+    requestBody: RequestOptionsOllama
     requestOptions: StreamRequestOptions
     onEnd?: (completion: string) => void
   }): Promise<string> {
@@ -132,8 +132,7 @@ export class ConversationHistory extends Base {
 
     const requestBody = createStreamRequestBody(provider.provider, {
       model: provider.modelName,
-      numPredictChat: this.config.numPredictChat,
-      temperature: this.config.temperature,
+      temperature: provider.temperature,
       messages: [
         ...messages,
         {
@@ -141,7 +140,7 @@ export class ConversationHistory extends Base {
           content: TITLE_GENERATION_PROMPT_MESAGE
         }
       ],
-      keepAlive: this.config.keepAlive
+      max_tokens: provider.maxTokens
     })
 
     return { requestOptions, requestBody }
@@ -156,10 +155,9 @@ export class ConversationHistory extends Base {
 
     const requestBody = createStreamRequestBody(provider.provider, {
       model: provider.modelName,
-      numPredictChat: this.config.numPredictChat,
-      temperature: this.config.temperature,
+      temperature: provider.temperature,
       messages,
-      keepAlive: this.config.keepAlive
+      max_tokens: provider.maxTokens
     })
 
     return { requestOptions, requestBody }

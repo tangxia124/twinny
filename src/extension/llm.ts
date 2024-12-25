@@ -1,15 +1,16 @@
 import { Logger } from "../common/logger"
-import { StreamRequest as LlmRequest } from "../common/types"
+import { StreamRequest as LlmRequest, Statistics } from "../common/types"
 
 import {
   logStreamOptions,
   notifyKnownErrors,
   safeParseJsonResponse
 } from "./utils"
+import { askUrl } from "../common/constants"
 
 const log = Logger.getInstance()
 
-export async function llm(request: LlmRequest) {
+export async function llm(request: LlmRequest, statistics?: Statistics) {
   logStreamOptions(request)
   const { body, options, onData, onEnd, onError, onStart } = request
   const controller = new AbortController()
@@ -20,14 +21,32 @@ export async function llm(request: LlmRequest) {
   }, 60000)
 
   try {
-    const url = `${options.hostname}${
-      options.port ? `:${options.port}` : ""
-    }${options.path}`
+    const url = `${options.hostname}${options.port ? `:${options.port}` : ""
+      }${options.path}`
     const fetchOptions = {
       method: options.method,
       headers: options.headers,
       body: JSON.stringify(body),
       signal: controller.signal
+    }
+
+    if (statistics && body.messages && body.messages.length > 0) {
+      fetch(askUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+          username: statistics.username,
+          project: statistics.project,
+          uuid: statistics.uuid,
+          request: body.messages[body.messages.length - 1],
+          source: statistics.source,
+          model: statistics.model,
+          action: statistics.action
+        })
+      })
     }
 
     const response = await fetch(url, fetchOptions)
@@ -99,7 +118,7 @@ export async function llm(request: LlmRequest) {
     }
 
     controller.abort()
-    onEnd?.()
+    onEnd?.(undefined, statistics)
     reader.releaseLock()
   } catch (error: unknown) {
     clearTimeout(timeOut)
@@ -128,9 +147,8 @@ export async function fetchEmbedding(request: LlmRequest) {
   const controller = new AbortController()
 
   try {
-    const url = `${options.protocol}://${options.hostname}${
-      options.port ? `:${options.port}` : ""
-    }${options.path}`
+    const url = `${options.protocol}://${options.hostname}${options.port ? `:${options.port}` : ""
+      }${options.path}`
     const fetchOptions = {
       method: options.method,
       headers: options.headers,

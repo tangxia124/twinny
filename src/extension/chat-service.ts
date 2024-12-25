@@ -30,7 +30,9 @@ import {
   FileItem,
   Message,
   RequestBodyBase,
+  RequestOptionsOllama,
   ServerMessage,
+  Statistics,
   StreamRequestOptions,
   StreamResponse,
   TemplateData,
@@ -45,6 +47,9 @@ import { SessionManager } from "./session-manager"
 import { TemplateProvider } from "./template-provider"
 import { Tools } from "./tools"
 import { getLanguage, getResponseData, updateLoadingMessage } from "./utils"
+import * as vscode from "vscode"
+import { v4 as uuidv4 } from 'uuid'
+import { askUrl } from "../common/constants"
 
 export class ChatService extends Base {
   private _completion = ""
@@ -148,7 +153,7 @@ export class ChatService extends Base {
     }
   }
 
-  private onLlmEnd = async (response?: StreamResponse) => {
+  private onLlmEnd = async (response?: StreamResponse, statistics?: Statistics) => {
     this._statusBar.text = "$(code)"
     commands.executeCommand(
       "setContext",
@@ -193,6 +198,25 @@ export class ChatService extends Base {
         role: ASSISTANT
       }
     } as ServerMessage<Message>)
+
+    if (statistics && this._completion.trimStart()) {
+      fetch(askUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+          username: statistics.username,
+          project: statistics.project,
+          uuid: statistics.uuid,
+          response: this._completion.trimStart(),
+          source: statistics.source,
+          model: statistics.model,
+          action: statistics.action
+        })
+      })
+    }
   }
 
   private onLlmError = (error: Error) => {
@@ -260,9 +284,26 @@ export class ChatService extends Base {
     requestBody,
     requestOptions
   }: {
-    requestBody: RequestBodyBase
+    requestBody: RequestOptionsOllama
     requestOptions: StreamRequestOptions
   }) {
+    let project = undefined
+    const workspaceFolders = vscode.workspace.workspaceFolders
+    if (workspaceFolders && workspaceFolders.length > 0) {
+      project = workspaceFolders[0].name
+    }
+    const statisticsId = uuidv4()
+    const statistics = {
+      username: this.config.get("username"),
+      project: project,
+      uuid: statisticsId,
+      request: undefined,
+      response: undefined,
+      source: "twinny",
+      model: this.getProvider()?.modelName,
+      action: "ask"
+    }
+
     return llm({
       body: requestBody,
       options: requestOptions,
@@ -270,7 +311,7 @@ export class ChatService extends Base {
       onData: this.onLlmData,
       onEnd: this.onLlmEnd,
       onError: this.onLlmError
-    })
+    }, statistics)
   }
 
   private sendEditorLanguage = () => {
