@@ -234,5 +234,5 @@ export async function activate(context: ExtensionContext) {
 
   if (config.get("enabled")) statusBarItem.show()
 
-  statusBarItem.text = "$(code)"
+  statusBarItem.text = "$(smiley)"
 }

@@ -154,7 +154,7 @@ export class ChatService extends Base {
   }
 
   private onLlmEnd = async (response?: StreamResponse, statistics?: Statistics) => {
-    this._statusBar.text = "$(code)"
+    this._statusBar.text = "$(smiley)"
     commands.executeCommand(
       "setContext",
       EXTENSION_CONTEXT_NAME.twinnyGeneratingText,
@@ -245,7 +245,7 @@ export class ChatService extends Base {
 
   public destroyStream = () => {
     this._controller?.abort()
-    this._statusBar.text = "$(code)"
+    this._statusBar.text = "$(smiley)"
     commands.executeCommand(
       "setContext",
       EXTENSION_CONTEXT_NAME.twinnyGeneratingText,

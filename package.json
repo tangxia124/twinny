@@ -291,7 +291,7 @@
         "twinny.contextLength": {
           "order": 5,
           "type": "number",
-          "default": 100,
+          "default": 10000,
           "markdownDescription": "Specifies how many lines of context (before and after the current line) to include in Fill-in-Middle (FIM) prompts. A higher number provides more context but may slow down completions.",
           "required": true
         },
