@@ -3,6 +3,7 @@ import * as vscode from "vscode"
 
 import {
   ACTIVE_FIM_PROVIDER_STORAGE_KEY,
+  DEFAULT_MODEL,
   EVENT_NAME,
   EXTENSION_SESSION_NAME,
   SYMMETRY_EMITTER_KEY,
@@ -233,9 +234,15 @@ export class BaseProvider {
 
   private fetchOllamaModels = async () => {
     try {
-      const models = await this._ollamaService?.fetchModels()
+      let models = await this._ollamaService?.fetchModels() as ApiModel[] | undefined
       if (!models?.length) {
-        return
+        models = [DEFAULT_MODEL]
+      } else {
+        models.map(model => {
+          model.source = "remote"
+          return model
+        })
+        models.unshift(DEFAULT_MODEL)
       }
       this.webView?.postMessage({
         type: EVENT_NAME.twinnyFetchOllamaModels,

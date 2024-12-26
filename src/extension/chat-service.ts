@@ -154,7 +154,7 @@ export class ChatService extends Base {
   }
 
   private onLlmEnd = async (response?: StreamResponse, statistics?: Statistics) => {
-    this._statusBar.text = "$(smiley)"
+
     commands.executeCommand(
       "setContext",
       EXTENSION_CONTEXT_NAME.twinnyGeneratingText,
@@ -217,6 +217,7 @@ export class ChatService extends Base {
         })
       })
     }
+    this._statusBar.text = "$(smiley)"
   }
 
   private onLlmError = (error: Error) => {
@@ -245,7 +246,6 @@ export class ChatService extends Base {
 
   public destroyStream = () => {
     this._controller?.abort()
-    this._statusBar.text = "$(smiley)"
     commands.executeCommand(
       "setContext",
       EXTENSION_CONTEXT_NAME.twinnyGeneratingText,
@@ -258,6 +258,7 @@ export class ChatService extends Base {
         role: ASSISTANT
       }
     } as ServerMessage<Message>)
+    this._statusBar.text = "$(smiley)"
   }
 
   private buildTemplatePrompt = async (

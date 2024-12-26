@@ -1,5 +1,6 @@
 import * as vscode from "vscode"
 import { defaultTemplates } from "../extension/templates"
+import { ApiModel } from "./types"
 
 export const EXTENSION_NAME = "@ext:htffund.twinny"
 export const ASSISTANT = "assistant"
@@ -266,13 +267,24 @@ export const DEFAULT_PROVIDER_FORM_VALUES = {
   apiPath: "/v1/chat/completions",
   apiProtocol: "http",
   id: "",
-  label: "CodeQwen"+"label"+"_default",
+  label: "CodeQwen" + "label" + "_default",
   modelName: "Qwen2_5-Coder-32B-Instruct-AWQ",
   provider: "customOpenAI",
   type: "chat",
   temperature: 0.2,
   maxTokens: 1024
 }
+
+export const DEFAULT_MODEL = {
+  authorization: "sk-iLiWSbLYunZDVpHVyZrmuA",
+  chatUrl: "http://llm.htffund.com/v1/chat/completions",
+  completeUrl: "http://llm.htffund.com/v1/completions",
+  maxTokens: 1024,
+  model: "Qwen2_5-Coder-32B-Instruct-AWQ",
+  name: "CodeQwen",
+  temperature: 0.1,
+  source: "default"
+} as ApiModel
 
 export const GITHUB_EVENT_NAME = {
   getPullRequests: "github.getPullRequests",
@@ -379,6 +391,6 @@ export const SYMMETRY_EMITTER_KEY = {
 
 //Define an array containing all the error messages that need to be detected when fetch error occurred
 export const knownErrorMessages = [
-"First parameter has member 'readable' that is not a ReadableStream.", //This error occurs When plugins such as Fitten Code are enabled
-"The 'transform.readable' property must be an instance of ReadableStream. Received an instance of h" //When you try to enable the Node.js compatibility mode Compat to solve the problem, this error may pop up
+  "First parameter has member 'readable' that is not a ReadableStream.", //This error occurs When plugins such as Fitten Code are enabled
+  "The 'transform.readable' property must be an instance of ReadableStream. Received an instance of h" //When you try to enable the Node.js compatibility mode Compat to solve the problem, this error may pop up
 ];

@@ -18,7 +18,7 @@ import { ApiModel, apiProviders } from "../common/types"
 import { TwinnyProvider } from "../extension/provider-manager"
 
 import { useOllamaModels, useProviders } from "./hooks"
-import { ModelSelect } from "./model-select"
+import { ModelSelect1, ModelSelect2 } from "./model-select"
 
 import indexStyles from "./styles/index.module.css"
 import styles from "./styles/providers.module.css"
@@ -67,7 +67,7 @@ export const Providers = () => {
     updateProvider({
       ...provider,
       modelName: model.model,
-      label: model.name + "_remote",
+      label: model.name + "_" + model.source,
       apiKey: model.authorization,
       temperature: model.temperature,
       maxTokens: model.maxTokens
@@ -92,7 +92,7 @@ export const Providers = () => {
           <>
             <div>
               <div className={styles.providersHeader}>
-                <VSCodeButton onClick={handleAdd}>Add Provider</VSCodeButton>
+                {/* <VSCodeButton onClick={handleAdd}>Add Provider</VSCodeButton> */}
                 <VSCodeButton appearance="secondary" onClick={handleReset}>
                   <i className="codicon codicon-refresh" />
                   {t("reset-providers")}
@@ -103,9 +103,9 @@ export const Providers = () => {
                   <div className={styles.providerHeader}>
                     {provider.provider === apiProviders.CustomOpenAI &&
                       hasOllamaModels && (
-                        <ModelSelect
+                        <ModelSelect2
                           models={models}
-                          model={provider.modelName}
+                          model={`${provider.label}(${provider.modelName})`}
                           setModel={(model: ApiModel) =>
                             handleSetModel(provider, model)
                           }
@@ -120,14 +120,14 @@ export const Providers = () => {
                       >
                         <i className="codicon codicon-edit" />
                       </VSCodeButton>
-                      <VSCodeButton
+                      {/* <VSCodeButton
                         appearance="icon"
                         title={t("copy-provider")}
                         aria-label={t("copy-provider")}
                         onClick={() => handleCopy(provider)}
                       >
                         <i className="codicon codicon-copy" />
-                      </VSCodeButton>
+                      </VSCodeButton> */}
                       <VSCodeButton
                         appearance="icon"
                         title={t("delete-provider")}
@@ -142,6 +142,9 @@ export const Providers = () => {
                   <div className={styles.providerDetails}>
                     <div>
                       <b>{t("label")}:</b> {provider.label}
+                    </div>
+                    <div>
+                      <b>{t("model-name")}:</b> {provider.modelName}
                     </div>
                     <div>
                       <b>{t("provider")}:</b> {provider.provider}
@@ -197,7 +200,6 @@ interface ProviderFormProps {
 function ProviderForm({ onClose, provider }: ProviderFormProps) {
   const { t } = useTranslation()
   const isEditing = provider !== undefined
-  const { models } = useOllamaModels()
   const { saveProvider, updateProvider } = useProviders()
   const [formState, setFormState] = React.useState<TwinnyProvider>(
     provider || DEFAULT_PROVIDER_FORM_VALUES
@@ -238,53 +240,24 @@ function ProviderForm({ onClose, provider }: ProviderFormProps) {
     onClose()
   }
 
-  const hasOllamaModels = !!models?.length
-
-  const getModelInput = () => {
-    if (formState.provider === apiProviders.CustomOpenAI && hasOllamaModels) {
-      return (
-        <div>
-          <div>
-            <label htmlFor="modelName">{t("model-name")}*</label>
-          </div>
-          <ModelSelect
-            models={models}
-            model={formState.modelName}
-            setModel={(model: ApiModel) => {
-              setFormState({
-                ...formState,
-                modelName: model.model,
-                label: model.name + "_remote",
-                apiKey: model.authorization,
-                temperature: model.temperature,
-                maxTokens: model.maxTokens
-              })
-            }}
-          />
-        </div>
-      )
-    }
-
-    return (
-      <>
-        <div>
-          <label htmlFor="modelName">{t("model-name")}*</label>
-        </div>
-        <VSCodeTextField
-          required
-          name="modelName"
-          onChange={handleChange}
-          value={formState.modelName}
-          placeholder={t("model-name-placeholder")}
-        ></VSCodeTextField>
-      </>
-    )
-  }
-
   return (
     <>
       <VSCodeDivider />
       <form onSubmit={handleSubmit} className={styles.providerForm}>
+
+        <div>
+          <div>
+            <label htmlFor="modelName">{t("model-name")}*</label>
+          </div>
+          <VSCodeTextField
+            required
+            name="modelName"
+            onChange={handleChange}
+            value={formState.modelName}
+            placeholder={t("model-name-placeholder")}
+          ></VSCodeTextField>
+        </div>
+
         <div>
           <div>
             <label htmlFor="label">{t("label")}*</label>
@@ -368,8 +341,6 @@ function ProviderForm({ onClose, provider }: ProviderFormProps) {
           </VSCodeDropdown>
         </div>
 
-        {getModelInput()}
-
         <div>
           <div>
             <label htmlFor="apiHostname">{t("hostname")}*</label>
@@ -415,7 +386,7 @@ function ProviderForm({ onClose, provider }: ProviderFormProps) {
           <VSCodeTextField
             onChange={handleChange}
             name="temperature"
-            value={formState.temperature+""}
+            value={formState.temperature + ""}
             placeholder={t("temperature-placeholder")}
           ></VSCodeTextField>
         </div>
@@ -427,7 +398,7 @@ function ProviderForm({ onClose, provider }: ProviderFormProps) {
           <VSCodeTextField
             onChange={handleChange}
             name="maxTokens"
-            value={formState.maxTokens+""}
+            value={formState.maxTokens + ""}
             placeholder={t("max-tokens-placeholder")}
           ></VSCodeTextField>
         </div>

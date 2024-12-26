@@ -209,10 +209,11 @@ export interface ApiModel {
   model: string
   name: string
   temperature: number
+  source: "default" | "remote"
 }
 
 export interface Statistics {
-  username: string|unknown
+  username: string | unknown
   project?: string
   uuid: string
   request?: string
