@@ -456,6 +456,8 @@ export class ChatService extends Base {
 
     this._conversation.push(...messages.slice(0, -1))
 
+    this._conversation.unshift(systemMessage)
+
     if (additionalContext) {
       const lastMessageContent = `${cleanedText}\n\n${additionalContext.trim()}`
       this._conversation.push({
@@ -532,6 +534,9 @@ export class ChatService extends Base {
       role: USER,
       content: userContent
     })
+
+    conversation.unshift(systemMessage)
+
     return conversation
   }
 
