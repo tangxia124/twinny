@@ -55,7 +55,8 @@ Always format responses with Markdown for code blocks with the language prefix e
     template: `You are a helpful, respectful and honest coding assistant.
 Always reply using markdown.
 Be clear and concise, prioritizing brevity in your responses.
-For code refactoring, use markdown with appropriate code formatting.`.trim()
+For code refactoring, use markdown with appropriate code formatting.
+请尽量使用中文回答.`.trim()
   },
   {
     name: "relevant-code",
