@@ -102,7 +102,7 @@ export class ProviderManager {
       apiHostname: "http://llm.htffund.com",
       apiPath: "/v1/completions",
       apiProtocol: "http",
-      fimTemplate: FIM_TEMPLATE_FORMAT.deepseek,
+      fimTemplate: FIM_TEMPLATE_FORMAT.codeqwen,
       label: "CodeQwen"+"_default",
       id: uuidv4(),
       modelName: "Qwen2_5-Coder-32B-Instruct-AWQ",

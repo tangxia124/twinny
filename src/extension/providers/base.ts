@@ -111,6 +111,7 @@ export class BaseProvider {
       [EVENT_NAME.twinnyNotification]: this.sendNotification,
       [EVENT_NAME.twinnyOpenDiff]: this.openDiff,
       [EVENT_NAME.twinnySendLanguage]: this.getCurrentLanguage,
+      [EVENT_NAME.twinnyUsername]: this.getUsername,
       [EVENT_NAME.twinnySendTheme]: this.getTheme,
       [EVENT_NAME.twinnySessionContext]: this.getSessionContext,
       [EVENT_NAME.twinnySetConfigValue]: this.setConfigurationValue,
@@ -320,6 +321,13 @@ export class BaseProvider {
       type: EVENT_NAME.twinnySendLanguage,
       data: getLanguage()
     } as ServerMessage<LanguageType>)
+  }
+
+  private getUsername = () => {
+    this.webView?.postMessage({
+      type: EVENT_NAME.twinnyUsername,
+      data: vscode.workspace.getConfiguration("twinny").get("username") as string
+    } as ServerMessage<string>)
   }
 
   private getSessionContext = (data: ClientMessage) => {

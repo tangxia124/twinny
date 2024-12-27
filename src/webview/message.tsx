@@ -14,6 +14,7 @@ import { CodeBlock } from "./code-block"
 import { ToolExecution } from "./tool-execution"
 
 import styles from "./styles/index.module.css"
+import { useUsername } from "./hooks"
 
 interface MessageProps {
   conversationLength?: number
@@ -157,16 +158,31 @@ export const Message: React.FC<MessageProps> = React.memo(
 
     if (!message?.content) return null
 
+    const username = useUsername()
     return (
       <div
-        className={`${styles.message} ${
-          message.role === ASSISTANT
-            ? styles.assistantMessage
-            : styles.userMessage
-        }`}
+        className={`${styles.message} ${message.role === ASSISTANT
+          ? styles.assistantMessage
+          : styles.userMessage
+          }`}
       >
         <div className={styles.messageRole}>
-          <span>{message.role === ASSISTANT ? TWINNY : YOU}</span>
+
+          <div>
+            {!isAssistant && (
+              <div >
+                <span className="codicon codicon-account"></span>
+                <span className={styles.username}>{username ? username : YOU}</span>
+              </div>
+            )}
+            {isAssistant && (
+              <div>
+                <span className="codicon codicon-copilot"></span>
+                <span className={styles.username}>{TWINNY}</span>
+              </div>
+            )}
+          </div>
+
           <div className={styles.messageOptions}>
             {editing && !isAssistant && (
               <>

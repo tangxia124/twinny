@@ -150,6 +150,12 @@ pre code {
   margin: 0;
 }
 
+.username {
+  padding-left: 10px;
+  font-size: 15px;
+}
+
+
 .messageRole {
   display: flex;
   justify-content: space-between;

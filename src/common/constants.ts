@@ -5,7 +5,7 @@ import { ApiModel } from "./types"
 export const EXTENSION_NAME = "@ext:htffund.twinny"
 export const ASSISTANT = "assistant"
 export const USER = "user"
-export const TWINNY = "twinny"
+export const TWINNY = "TWINNY"
 export const SYSTEM = "system"
 export const YOU = "You"
 export const EMPTY_MESAGE = "Sorry, I don’t understand. Please try again."
@@ -90,6 +90,7 @@ export const EVENT_NAME = {
   twinnyStopSymmetryProvider: "twinny-stop-symmetry-provider",
   twinnySymmetryModels: "twinny-symmetry-models",
   twinnyTextSelection: "twinny-text-selection",
+  twinnyUsername: "twinny-username",
 }
 
 export const TWINNY_COMMAND_NAME = {

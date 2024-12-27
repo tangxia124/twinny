@@ -70,7 +70,11 @@ export const Providers = () => {
       label: model.name + "_" + model.source,
       apiKey: model.authorization,
       temperature: model.temperature,
-      maxTokens: model.maxTokens
+      maxTokens: model.maxTokens,
+      fimTemplate: provider.type === "fim" && model.name.toLowerCase().includes("codeqwen")
+        ? FIM_TEMPLATE_FORMAT.codeqwen
+        : (provider.type === "fim" && model.name.toLowerCase().includes("opencodeinterpreter")
+          ? FIM_TEMPLATE_FORMAT.deepseek : undefined)
     })
   }
 

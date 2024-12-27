@@ -77,6 +77,7 @@ export class ChatService extends Base {
     this._reranker = new Reranker()
     this._sessionManager = sessionManager
     this._tools = new Tools(webView, extensionContext)
+    this.sendUsername()
   }
 
 
@@ -319,6 +320,13 @@ export class ChatService extends Base {
     this._webView?.postMessage({
       type: EVENT_NAME.twinnySendLanguage,
       data: getLanguage()
+    } as ServerMessage)
+  }
+
+  private sendUsername = () => {
+    this._webView?.postMessage({
+      type: EVENT_NAME.twinnyUsername,
+      data: this.config.get("username") as string
     } as ServerMessage)
   }
 

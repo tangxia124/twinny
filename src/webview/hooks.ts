@@ -201,6 +201,28 @@ export const useLanguage = (): LanguageType | undefined => {
   return language
 }
 
+export const useUsername = (): string | undefined => {
+  const [username, setUsername] = useState<string>()
+  const handler = (event: MessageEvent) => {
+    const message: ServerMessage<string> = event.data
+    if (message?.type === EVENT_NAME.twinnyUsername) {
+      const username = message.data
+      if (username) {
+        setUsername(username)
+      }
+    }
+    return () => window.removeEventListener("message", handler)
+  }
+  useEffect(() => {
+    global.vscode.postMessage({
+      type: EVENT_NAME.twinnyUsername
+    })
+    window.addEventListener("message", handler)
+    return () => window.removeEventListener("message", handler)
+  }, [])
+  return username
+}
+
 export const useTemplates = () => {
   const [templates, setTemplates] = useState<string[]>()
   const handler = (event: MessageEvent) => {

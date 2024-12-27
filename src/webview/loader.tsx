@@ -11,7 +11,7 @@ export const ChatLoader = () => {
   const theme = useTheme()
   const loader = useLoading()
   const [dots, setDots] = useState("")
-
+  
   useEffect(() => {
     const interval = setInterval(() => {
       setDots((prevDots) => {
