@@ -12,6 +12,7 @@ import {
 import * as vscode from "vscode"
 
 import {
+  applyUrl,
   EVENT_NAME,
   EXTENSION_CONTEXT_NAME,
   EXTENSION_NAME,
@@ -194,6 +195,21 @@ export async function activate(context: ExtensionContext) {
       commands.executeCommand("workbench.action.closeSidebar")
       fullScreenProvider.createOrShowPanel()
     }),
+    commands.registerCommand(TWINNY_COMMAND_NAME.twinnyApplySend,
+      (project: string, applyContext: string, action: string, username: string) => {
+        fetch(applyUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            project: project,
+            applyContext: applyContext,
+            action: action,
+            username: username
+          })
+        })
+      }),
     workspace.onDidCloseTextDocument((document) => {
       const filePath = document.uri.fsPath
       fileInteractionCache.endSession()

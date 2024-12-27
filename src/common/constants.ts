@@ -91,6 +91,7 @@ export const EVENT_NAME = {
   twinnySymmetryModels: "twinny-symmetry-models",
   twinnyTextSelection: "twinny-text-selection",
   twinnyUsername: "twinny-username",
+  twinnyCopyCodeApplySend: "twinny-copyCode-applySend"
 }
 
 export const TWINNY_COMMAND_NAME = {
@@ -116,6 +117,7 @@ export const TWINNY_COMMAND_NAME = {
   templateCompletion: "twinny.templateCompletion",
   templates: "twinny.templates",
   twinnySymmetryTab: "twinny.symmetry",
+  twinnyApplySend: "twinny.applySend"
 }
 
 export const CONVERSATION_EVENT_NAME = {

@@ -1,10 +1,10 @@
 import React, { ReactNode } from "react"
 import { useTranslation } from "react-i18next"
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter"
-import { vs,vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism"
+import { vs, vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism"
 import { VSCodeButton } from "@vscode/webview-ui-toolkit/react"
 
-import { ASSISTANT, EVENT_NAME } from "../common/constants"
+import { ASSISTANT, EVENT_NAME, TWINNY_COMMAND_NAME } from "../common/constants"
 import { LanguageType, Theme, ThemeType } from "../common/types"
 
 import { getLanguageMatch } from "./utils"
@@ -31,6 +31,11 @@ export const CodeBlock = (props: CodeBlockProps) => {
   const handleCopy = () => {
     const text = String(children).replace(/^\n/, "")
     navigator.clipboard.writeText(text)
+
+    global.vscode.postMessage({
+      type: EVENT_NAME.twinnyCopyCodeApplySend,
+      data: text,
+    })
   }
 
   const handleNewDocument = () => {

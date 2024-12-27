@@ -1,6 +1,3 @@
-import { serverMessageKeys } from "symmetry-core"
-import * as vscode from "vscode"
-
 import {
   ACTIVE_FIM_PROVIDER_STORAGE_KEY,
   DEFAULT_MODEL,
@@ -37,6 +34,7 @@ import {
   getTheme,
   updateLoadingMessage
 } from "../utils"
+import * as vscode from "vscode"
 
 export class BaseProvider {
   private _chatService: ChatService | undefined
@@ -108,6 +106,7 @@ export class BaseProvider {
       [EVENT_NAME.twinnyHideBackButton]: this.twinnyHideBackButton,
       [EVENT_NAME.twinnyListTemplates]: this.listTemplates,
       [EVENT_NAME.twinnyNewDocument]: this.createNewUntitledDocument,
+      [EVENT_NAME.twinnyCopyCodeApplySend]: this.copyCodeApplySend,
       [EVENT_NAME.twinnyNotification]: this.sendNotification,
       [EVENT_NAME.twinnyOpenDiff]: this.openDiff,
       [EVENT_NAME.twinnySendLanguage]: this.getCurrentLanguage,
@@ -291,6 +290,18 @@ export class BaseProvider {
 
   private acceptSolution = async (message: ClientMessage) => {
     await this._diffManager.acceptSolution(message)
+
+    let project = ""
+    const workspaceFolders = vscode.workspace.workspaceFolders
+    if (workspaceFolders && workspaceFolders.length > 0) {
+      project = workspaceFolders[0].name
+    }
+    vscode.commands.executeCommand(TWINNY_COMMAND_NAME.twinnyApplySend,
+        project, 
+        message.data, 
+        "acceptSolution", 
+        this._chatService?.config.get("username") as string
+    )
   }
 
   private createNewUntitledDocument = async (message: ClientMessage) => {
@@ -300,6 +311,32 @@ export class BaseProvider {
       language: lang.languageId
     })
     await vscode.window.showTextDocument(document)
+
+    let project = ""
+    const workspaceFolders = vscode.workspace.workspaceFolders
+    if (workspaceFolders && workspaceFolders.length > 0) {
+      project = workspaceFolders[0].name
+    }
+    vscode.commands.executeCommand(TWINNY_COMMAND_NAME.twinnyApplySend,
+        project, 
+        message.data, 
+        "CREATE_NEW_FILE", 
+        this._chatService?.config.get("username") as string
+    )
+  }
+
+  private copyCodeApplySend = async (message: ClientMessage) => {
+    let project = ""
+    const workspaceFolders = vscode.workspace.workspaceFolders
+    if (workspaceFolders && workspaceFolders.length > 0) {
+      project = workspaceFolders[0].name
+    }
+    vscode.commands.executeCommand(TWINNY_COMMAND_NAME.twinnyApplySend,
+        project, 
+        message.data, 
+        "COPY_CODE", 
+        this._chatService?.config.get("username") as string
+    )
   }
 
   private getGlobalContext = (message: ClientMessage) => {

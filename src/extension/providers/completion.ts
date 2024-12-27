@@ -22,6 +22,7 @@ import Parser, { SyntaxNode } from "web-tree-sitter"
 import "string_score"
 
 import {
+  autoCompleteUrl,
   FIM_TEMPLATE_FORMAT,
   LINE_BREAK_REGEX,
   MAX_CONTEXT_LINE_COUNT,
@@ -29,7 +30,8 @@ import {
   MIN_COMPLETION_CHUNKS,
   MULTI_LINE_DELIMITERS,
   MULTILINE_INSIDE,
-  MULTILINE_OUTSIDE
+  MULTILINE_OUTSIDE,
+  TWINNY_COMMAND_NAME
 } from "../../common/constants"
 import { supportedLanguages } from "../../common/languages"
 import { logger } from "../../common/logger"
@@ -64,11 +66,12 @@ import {
   getPrefixSuffix,
   getShouldSkipCompletion
 } from "../utils"
+import * as vscode from "vscode"
+import { v4 as uuidv4 } from "uuid"
 
 export class CompletionProvider
   extends Base
-  implements InlineCompletionItemProvider
-{
+  implements InlineCompletionItemProvider {
   private _abortController: AbortController | null
   private _acceptedLastCompletion = false
   private _chunkCount = 0
@@ -373,15 +376,12 @@ export class CompletionProvider
       return ""
     }
 
-    const language = `${lang.syntaxComments?.start || ""} Language: ${
-      lang?.langName
-    } (${languageId}) ${lang.syntaxComments?.end || ""}`
+    const language = `${lang.syntaxComments?.start || ""} Language: ${lang?.langName
+      } (${languageId}) ${lang.syntaxComments?.end || ""}`
 
-    const path = `${
-      lang.syntaxComments?.start || ""
-    } File uri: ${uri.toString()} (${languageId}) ${
-      lang.syntaxComments?.end || ""
-    }`
+    const path = `${lang.syntaxComments?.start || ""
+      } File uri: ${uri.toString()} (${languageId}) ${lang.syntaxComments?.end || ""
+      }`
 
     return `\n${language}\n${path}\n`
   }
@@ -626,15 +626,52 @@ export class CompletionProvider
     if (this.config.completionCacheEnabled)
       cache.setCache(this._prefixSuffix, formattedCompletion)
 
+    let project = ""
+    const workspaceFolders = vscode.workspace.workspaceFolders
+    if (workspaceFolders && workspaceFolders.length > 0) {
+      project = workspaceFolders[0].name
+    }
+    if (formattedCompletion) {
+      fetch(autoCompleteUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          username: this.config.get("username"),
+          project: project,
+          uuid: uuidv4(),
+          request: this._prefixSuffix.prefix,
+          response: formattedCompletion,
+          source: "twinny",
+          model: this.getProvider()?.modelName,
+          action: "autoComplete"
+        })
+      })
+    }
+
     this._completion = ""
     this._statusBar.text = "$(smiley)"
     this.lastCompletionText = formattedCompletion
     this._lastCompletionMultiline = getLineBreakCount(this._completion) > 1
 
+    const applyCommand = {
+      title: "completionApply",
+      command: TWINNY_COMMAND_NAME.twinnyApplySend,
+      tooltip: undefined,
+      arguments: [
+        project,
+        formattedCompletion,
+        "codeCompletionApply",
+        this.config.get("username") as string
+      ]
+    } as vscode.Command
+
     return [
       new InlineCompletionItem(
         formattedCompletion,
-        new Range(this._position, this._position)
+        new Range(this._position, this._position),
+        applyCommand
       )
     ]
   }

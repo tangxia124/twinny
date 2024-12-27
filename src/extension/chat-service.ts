@@ -204,8 +204,7 @@ export class ChatService extends Base {
       fetch(askUrl, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify({
           username: statistics.username,
@@ -289,7 +288,7 @@ export class ChatService extends Base {
     requestBody: RequestOptionsOllama
     requestOptions: StreamRequestOptions
   }) {
-    let project = undefined
+    let project = ""
     const workspaceFolders = vscode.workspace.workspaceFolders
     if (workspaceFolders && workspaceFolders.length > 0) {
       project = workspaceFolders[0].name
