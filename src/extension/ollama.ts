@@ -5,10 +5,8 @@ export class OllamaService {
   private _baseUrl: string
 
   constructor() {
-    const protocol = (this._config.get("ollamaUseTls") as boolean)
-      ? "https"
-      : "http"
-    const hostname = this._config.get("ollamaHostname") as string
+    const protocol = "http"
+    const hostname = this._config.get("hostname") as string
     this._baseUrl = `${protocol}://${hostname}`
   }
 

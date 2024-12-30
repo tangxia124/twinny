@@ -33,6 +33,8 @@ export class Base {
     if (!username) {
       const userInfo = os.userInfo();
       const username = userInfo.username ? userInfo.username : "vscode default username";
+      this.config.update("username", username, ConfigurationTarget.WorkspaceFolder)
+      this.config.update("username", username, ConfigurationTarget.Workspace)
       this.config.update("username", username, ConfigurationTarget.Global)
     }
   }
@@ -91,6 +93,8 @@ export class Base {
     if (!username) {
       const userInfo = os.userInfo();
       const username = userInfo.username ? userInfo.username : "vscode default username";
+      this.config.update("username", username, ConfigurationTarget.WorkspaceFolder)
+      this.config.update("username", username, ConfigurationTarget.Workspace)
       this.config.update("username", username, ConfigurationTarget.Global)
     }
   }

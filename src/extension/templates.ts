@@ -59,47 +59,6 @@ For code refactoring, use markdown with appropriate code formatting.
 请尽量使用中文回答.`.trim()
   },
   {
-    name: "relevant-code",
-    template: `
-The following code snippet may be relevant to your query. Incorporate pertinent information in your response:
-
-Limit your answer to three sentences.
-
-{{{code}}}
-
-Disregard if not relevant to the current query.`.trim()
-  },
-  {
-    name: "relevant-files",
-    template: `
-These file paths may be relevant to your query:
-
-{{{code}}}
-
-Consider these in your response if pertinent. Disregard if not relevant.`.trim()
-  },
-  {
-    name: "fim",
-    template: "<PRE>{{{prefix}}} <SUF> {{{suffix}}} <MID>"
-  },
-  {
-    name: "review",
-    template: `
-You are a highly skilled software engineer specializing in code reviews.
-Your task is to review code changes in a unidiff format.
-Ensure your feedback is constructive and professional.
-
-Review the following diff:
-
-\`\`\`
-{{{code}}}
-\`\`\`
-
-Present it in markdown format, and refrain from mentioning:
-- Adding comments or documentation
-- Adding dependencies or related pull requests`.trim()
-  },
-  {
     name: "fim-system",
     template: ""
   }
