@@ -469,8 +469,8 @@ export const Chat = (props: ChatProps): JSX.Element => {
     <VSCodePanelView>
       <div className={styles.container}>
 
-        <div>
-          {!conversation && (<div className={styles.text}>
+        <div  className={styles.text}>
+          {!conversation && (<div>
 
             <h1 className={styles.textHead}>对话</h1>
             <div>

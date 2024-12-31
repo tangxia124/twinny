@@ -481,7 +481,7 @@ pre code {
 
 .text{
   font-family: 'Microsoft YaHei';
-  overflow: hidden;
+  overflow: auto;
 }
 
 .text .textHead:first-of-type{
