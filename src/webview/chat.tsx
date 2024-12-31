@@ -468,6 +468,31 @@ export const Chat = (props: ChatProps): JSX.Element => {
   return (
     <VSCodePanelView>
       <div className={styles.container}>
+
+        <div>
+          {!conversation && (<div className={styles.text}>
+
+            <h1 className={styles.textHead}>对话</h1>
+            <div>
+              <h3 className={styles.textSubHead}>打开侧边栏</h3>
+              <p>要使用 Twinny 聊天，可以通过 VSCode 侧边栏访问。Twinny 会在会话之间保留聊天历史记录。您可以通过点击顶部面板上的“历史”图标来查看聊天历史。</p>
+              <h3 className={styles.textSubHead}>上下文与代码选择</h3>
+              <p>当您在编辑器中高亮/选择代码时，Twinny 会将其作为聊天消息的上下文。如果您没有选择任何代码，它将仅使用消息本身以及之前的消息。您也可以右键点击选中的代码，选择 Twinny 选项来进行重构、解释或执行其他操作。</p>
+            </div>
+
+            <h1 className={styles.textHead}>自动补全</h1>
+            <div>
+              <p>要使用 Twinny 自动补全代码片段，只需在编辑器中开始输入，Twinny 就会为您自动补全。</p>
+              <p>如果您希望手动触发代码补全，可以在设置菜单中关闭自动内联代码补全（该菜单位于 Twinny 侧边面板顶部），然后使用快捷键 <code dir="auto">ALT+\</code> 来触发代码补全。</p>
+            </div>
+
+            <h1 className={styles.textHead}>键盘快捷键</h1>
+            <table><thead><tr><th>快捷键</th><th>描述</th></tr></thead><tbody><tr><td><code dir="auto">ALT+\</code></td><td>触发内联代码补全</td></tr><tr><td><code dir="auto">CTRL+SHIFT+/</code></td><td>停止内联代码生成</td></tr><tr><td><code dir="auto">Tab</code></td><td>接受生成的内联代码</td></tr></tbody></table>
+
+          </div>
+          )}
+        </div>
+
         {!!fullScreen && (
           <div className={styles.fullScreenActions}>
             <VSCodeButton
@@ -527,7 +552,7 @@ export const Chat = (props: ChatProps): JSX.Element => {
         {!!selection.length && (
           <Suggestions isDisabled={!!generatingRef.current} />
         )}
-        {showProvidersContext &&  <ProviderSelect />}
+        {showProvidersContext && <ProviderSelect />}
         <div className={styles.chatOptions}>
           <div>
             <VSCodeButton

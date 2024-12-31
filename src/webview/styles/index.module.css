@@ -478,3 +478,28 @@ pre code {
 .prTitle a {
   color: var(--vscode-textLink-foreground);
 }
+
+.text{
+  font-family: 'Microsoft YaHei';
+  overflow: hidden;
+}
+
+.text .textHead:first-of-type{
+  padding-top: 0;
+  font-size: 18px;
+  line-height: 2;
+  font-weight: 600;
+}
+
+.text .textHead:not(:first-of-type){
+  padding-top: 18px;
+  font-size: 18px;
+  line-height: 2;
+  font-weight: 600;
+}
+
+.textSubHead{
+  font-size: 16px;
+  line-height: 1;
+  font-weight: 450;
+}
